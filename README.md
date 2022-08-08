@@ -4,14 +4,14 @@ My coursework at the University of Pennsylvania from 1991-1996
 ### INTRODUCTION TO COMPUTER ARCHITECTURE (cse 240, Fall 1995)
 
 ##### Instructor
-  Richard P. Paul, 3401 Walnut Street, 333C (enter through C339)
-  Office hours: Mon, Tue, Wed: 1600 - 1700
-  userid is lou
+Richard P. Paul, 3401 Walnut Street, 333C (enter through C339)  
+Office hours: Mon, Tue, Wed: 1600 - 1700  
+userid is lou  
 
 ##### Teaching Assistant
-  Fei Xia, 3401 Walnut Street, 339C
-  Ofﬁce hours: Tue, Thurs: 1330 - 1500
-  userid is fxia
+Fei Xia, 3401 Walnut Street, 339C  
+Ofﬁce hours: Tue, Thurs: 1330 - 1500  
+userid is fxia  
 
 ##### Prerequisite
 * Cse 110, or cse 121.
