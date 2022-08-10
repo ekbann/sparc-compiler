@@ -1,5 +1,15 @@
 # How to Install and Use QEMU
 
+#### Installing 7-Zip
+
+By default, 7-Zip is available on Debian 11 Bullseye standard repository making the installation straightforward.
+
+In your terminal, begin the installation using the following command.
+
+```sudo apt install p7zip-full```
+
+Type Y, then press the ENTER KEY to proceed.
+
 #### QEMU and KVM:
 QEMU can be combined with KVM to use hardware virtualization features of your CPU. QEMU + KVM will get you almost near native hardware performance.
 
@@ -36,7 +46,15 @@ Now press y and then press <Enter> to continue.
 KVM and QEMU should be installed.
 
 #### Using QEMU and KVM:
+
 In this section, I will show you how to install Alpine Linux on a QEMU + KVM virtual machine.
+
+```
+git clone https://github.com/ekbann/sparc-compiler
+cd sparc-compiler/ss5
+7z e SunOS-4.1.4.7z.001
+qemu-img create -f qcow2 sunos414.img 2G
+```
 
 Creating a VM Directory:
 
