@@ -21,13 +21,13 @@ The following operating systems will run on a SPARCstation 5:
 * NeXTSTEP
 * OPENSTEP/Mach
 
-##### Sun-4 architecture
+#### Sun-4 architecture
 The Sun-4 architecture refers to the VME-based architecture described above and used in the Sun 4/100, 4/200, SPARCserver 300 and SPARCserver 400 ranges. Sun-4 support was included in SunOS 3.2 onwards and Solaris 2.1 to 2.4. OpenBSD and NetBSD also will run on the Sun-4 architecture families.
 
 Sun-4m
 Originally a multiprocessor Sun-4 variant, based on the MBus processor module bus introduced in the SPARCserver 600MP series. The Sun-4m architecture later also encompassed non-MBus uniprocessor systems such as the SPARCstation 5, utilizing SPARC V8-architecture processors. Supported by SunOS 4.1.2 onwards and Solaris 2.1 to 9. SPARCserver 600MP support was dropped after Solaris 2.5.1.
 
-##### SunOS
+#### SunOS
 
 SunOS is a Unix-branded operating system developed by Sun Microsystems for their workstation and server computer systems. The SunOS name is usually only used to refer to versions 1.0 to 4.1.4, which were based on BSD, while versions 5.0 and later are based on UNIX System V Release 4, and are marketed under the brand name Solaris.
 
@@ -43,7 +43,7 @@ The last release of SunOS 4 was 4.1.4 (Solaris 1.1.2) in 1994. The sun4, sun4c, 
 
 Sun continued to ship SunOS 4.1.3 and 4.1.4 until December 27, 1998; they were supported until September 30, 2003.
 
-"SunOS" and "Solaris"
+#### "SunOS" and "Solaris"
 
 In 1987, AT&T Corporation and Sun announced that they were collaborating on a project to merge the most popular Unix flavors on the market at that time: BSD (including many of the features then unique to SunOS), System V, and Xenix. This would become System V Release 4 (SVR4).
 
