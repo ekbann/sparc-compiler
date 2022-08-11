@@ -39,7 +39,7 @@ The APT package repository cache should be updated.
 
 Now install QEMU with the following command:
 
-```$ sudo apt install qemu qemu-kvm```
+```$ sudo apt install qemu qemu-kvm qemu-system-sparc```
 
 Now press y and then press <Enter> to continue.
 
@@ -54,6 +54,8 @@ git clone https://github.com/ekbann/sparc-compiler
 cd sparc-compiler/ss5
 7z e SunOS-4.1.4.7z.001
 qemu-img create -f qcow2 sunos414.img 2G
+startx
+qemu-system-sparc -vga cg3 -M SS-5 -bios ss5.bin -m 32 -hda sunos414.img -hdb Solaris1_1_2.iso
 ```
 
 Creating a VM Directory:
