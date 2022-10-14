@@ -30,7 +30,7 @@ struct entry *context [MAX_CONTEXT_LEVELS];
 %token <lexeme> CCON FCON ICON SCON
 %token INC DEC
 %token MOD
-%token EQUAL NOT EQUAL
+%token EQUAL NOT_EQUAL
 %token LT, LE, GT, GE
 %token SHIFTL SHIFTR
 %token STRCTPTR
@@ -94,6 +94,7 @@ external_decls	: declaration external_decls
 declaration	: modifier type_name var_list ';' {
 			flag modifier = FALSE;
 			$$ = $3;
+            }
 		| type_name var_list ';' {$$ = $2;}
 		;
 
@@ -261,8 +262,7 @@ scalar_var	: ID {
 			}
 		;
 
-function_def	: function_hdr '{' {context_level++; flag_external = FALSE;) function_bo
-dy '}' {delete_level();}
+function_def	: function_hdr '{' {context_level++; flag_external = FALSE;} function_body '}' {delete_level();}
 		;
 
 function_hdr	: type_name '*' ID '(' parm_type_list ')' {
@@ -306,7 +306,7 @@ function_hdr	: type_name '*' ID '(' parm_type_list ')' {
 		;
 
 parm_type_list	: parm_list
-		| ($$ = NULL;)
+		| {$$ = NULL;}
 		;
 
 parm_list	: parm_decl {
@@ -369,7 +369,7 @@ statement	: compound_stmt {delete_level(); $$ = $1;}
 		| expression ';'
 		| if_stmt
 		| for_stmt
-		| while stmt
+		| while_stmt
 		| dowhile_stmt
 		| return_stmt
 		;
@@ -460,7 +460,7 @@ binary_expr	: binary_expr OR binary_expr {
 		| unary_expr
 		;
 
-unary_expr	: unary_op_unary_expr {
+unary_expr	: unary_op unary_expr {
 			$$ = make_node ($1, $2, NULL);
 			$$->node_class = PREFIX;
 			}

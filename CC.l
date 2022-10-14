@@ -27,9 +27,9 @@ int		({dec}|0{oct}*|0[xX]{hex}+)[uU]?[lL]?
 escseq		\\(.|{oct}{1,3}|x{hex}{1,2})
 char		\'({escseq}|[^\\\'\n])+\'
 string1		\"({escseq}|[^\\\"\n])*\"
-string2		\"(({escseq}|[^\\\"\n]}*\\[\t ]*\n)+({escseq}|[^\\\"\n])*\"
+string2		\"(({escseq}|[^\\\"\n])*\\[\t ]*\n)+({escseq}|[^\\\"\n])*\"
 string		({string1}|{string2})
-spchar		[\;\,\:\&\=\+\-\*\/\!\[\]\.\{\(\}\)]
+spchar		[\;\,\:\&\=\+\-\*\/\%\!\[\]\.\{\(\}\)]
 tokenliston	"debug(token_listing_on)"
 tokenlistoff	"debug(token_listing_off)"
 nodedumpon	"debug(node_dump_on)"
@@ -55,7 +55,7 @@ halt		"debug(halt)"
 <COMMENT>{symtabstats}		{symtab_stats();}
 <COMMENT>{commenton}		{comment = TRUE;}
 <COMMENT>{commentoff}		{comment = FALSE;}
-<COMMENT>{halt}			{printf("\n*** COMPILER HALTED\n\n"); exit(o);}
+<COMMENT>{halt}			{printf("\n*** COMPILER HALTED\n\n"); exit(0);}
 <COMMENT>.			{/* ignore comment */}
 <COMMENT>\n			{linenum++;}
 <COMMENT>"*/"			{BEGIN INITIAL;}
