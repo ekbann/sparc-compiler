@@ -161,7 +161,8 @@ static		{debug(yytext); return(STATIC);}
 		   debug_entry(SCON, yytext);
 		 return(SCON);
 		}
-		{if (token_listing) {
+
+.		{if (token_listing) {
 		      num_illegal++;
 		      printf("%d: <illegal, %s>\n", linenum, yytext);
 		   }
