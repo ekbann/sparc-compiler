@@ -93,13 +93,13 @@ static		{debug(yytext); return(STATIC);}
 {spchar}	{debug(yytext); yylval.token = yytext[0]; return(*yytext);}
 
 {id}		{
-		 if (yylval.symp lookup (yytext)) { /* if string exists */
-		   yylval. symp->references--;	/* false count */
-		   yylval. lexeme yylval.symp->lexeme; /* use it; save mem */
+		 if (yylval.symp = lookup (yytext)) { /* if string exists */
+		   yylval.symp->references--;	/* false count */
+		   yylval.lexeme = yylval.symp->lexeme; /* use it; save mem */
 		 }
 		 else {	/* if not, allocate mem for new lexeme */
-		   yylval. lexeme = (char *)malloc(yyleng+2);
-		   strcpy (yylval. lexeme, yytext);
+		   yylval.lexeme = (char *)malloc(yyleng+2);
+		   strcpy (yylval.lexeme, yytext);
 		 }
 		 if (token_listing)
 		   debug_entry (ID, yytext);
@@ -112,7 +112,7 @@ static		{debug(yytext); return(STATIC);}
 		   yylval.lexeme = yylval.symp->lexeme; /* use it; save mem */
 		 }
 		 else {		/* if not, allocate mem for new lexeme */
-		   yylval. lexeme = (char *) malloc(yyleng+1);
+		   yylval.lexeme = (char *) malloc(yyleng+1);
 		   strcpy(yylval.lexeme, yytext);
 		 }
 		 if (token_listing)
