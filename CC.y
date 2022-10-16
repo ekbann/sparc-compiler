@@ -31,7 +31,7 @@ struct entry *context [MAX_CONTEXT_LEVELS];
 %token INC DEC
 %token MOD
 %token EQUAL NOT_EQUAL
-%token LT, LE, GT, GE
+%token LT LE GT GE
 %token SHIFTL SHIFTR
 %token STRCTPTR
 
@@ -59,7 +59,7 @@ struct entry *context [MAX_CONTEXT_LEVELS];
 %left OR
 %left AND
 %left EQUAL NOT_EQUAL
-%left LT, LE, GT, GE
+%left LT LE GT GE
 %left '+' '-'
 %left '*' '/' '%'
 %right '!' INC DEC
@@ -72,7 +72,7 @@ struct entry *context [MAX_CONTEXT_LEVELS];
 %token PARAMETER
 %token ARRAY
 %token LEAF
-%token LVAL, RVAL, POSTFIX, PREFIX
+%token LVAL RVAL POSTFIX PREFIX
 
 %type <token> modifier type_name unary_op
 %type <symp> program external_decls declaration var_list var_item
