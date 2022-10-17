@@ -92,7 +92,7 @@ external_decls	: declaration external_decls
 		;
 
 declaration	: modifier type_name var_list ';' {
-			flag modifier = FALSE;
+			flag_modifier = FALSE;
 			$$ = $3;
             }
 		| type_name var_list ';' {$$ = $2;}
@@ -245,7 +245,7 @@ scalar_var	: ID {
 			  yyerror("multiply defined identifier");
 			if ($$)
 			  $$->references--;	/* see 121.t page 1 */
-			$$ insert (ID, $1, context_level);
+			$$ = insert (ID, $1, context_level);
 			}
 		| ID '(' parm_type_list ')' {
 			if (($$ = lookup($1)) && ($$->scope == context_level))
@@ -299,7 +299,7 @@ function_hdr	: type_name '*' ID '(' parm_type_list ')' {
 			$$ = insert(ID, $1, context_level);
 			fn_p = $$; /* for RETURN type verification */
 			$$->e_type = e_fn;
-			$$->t_type t_void; /* c_type = ??? */
+			$$->t_type = t_void; /* c_type = ??? */
 			/* we must connect the fn_parms liked list to ID */
 			$$->type.fn.parameters = $3;
 			}
@@ -525,12 +525,12 @@ constant	: ICON {
 			  $$ = insert(CCON, $1, 0);	/* create one */
 			}
 		| SCON {
-			char 1[6];
+			char l[6];
 			if (!($$ = lookup($1))) {   /* if SCON doesn't exist */
 			  $$ = insert(SCON, $1, 0);	/* create one */
 			  fprintf(fp, "%s:\t.asciz\t%s\n",
-				  newlabel(1, 'C'), $$->lexeme);
-			  strcpy($$->type.con.label, 1);
+				  newlabel(l, 'C'), $$->lexeme);
+			  strcpy($$->type.con.label, l);
 			}
 			}
 		| FCON {
