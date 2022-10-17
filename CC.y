@@ -266,7 +266,7 @@ function_def	: function_hdr '{' {context_level++; flag_external = FALSE;} functi
 		;
 
 function_hdr	: type_name '*' ID '(' parm_type_list ')' {
-			if (($$ lookup($3)) && ($$->scope == context_level))
+			if (($$ = lookup($3)) && ($$->scope == context_level))
 			  yyerror("multiply defined identifier");
 			if ($$)
 			  $$->references--;	/* see 121.t page 1 */
