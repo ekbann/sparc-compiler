@@ -285,7 +285,7 @@ fprintf(fp, "%s:\n", lf);
 code(p->right->right);
 fprintf(fp, "%s:\n", lt);
 }
-{
+}
 break;
 case AND: {
 char l[6]; /* label */
