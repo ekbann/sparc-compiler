@@ -354,14 +354,14 @@ free_reg(p->right);
 get_reg(p);
 free_reg(p->left->left);  /* don't need LVAL but keep RVAL */
 break;
-
+}
 else {			/* must be a variable name */
 if (p->left->type.var.m_type == m_extern) { /* an external? */
-fprintf(fp, "\tset\t%s, %s\n", p->left->laxeme,
+fprintf(fp, "\tset\t%s, %s\n", p->left->lexeme,
 	print_reg(get_reg(p->left)));
 fprintf(fp, "\tst\t%s, [%s]\n",
 	print_reg(p->right->where),
-	print_reg(p-left->where));
+	print_reg(p->left->where));
 free_reg(p->right);	/* I ADDED THIS. IS IT REQUIRED? */
 get_reg(p);
 free_reg(p->left);
@@ -387,7 +387,7 @@ fprintf(fp, "\tst\t%s, [%s]\n", print_reg(p->right->where),
 	print_reg(p->left->where));
 free_reg(p->right);
 get_reg(p);
-free reg(p->left);
+free_reg(p->left);
 }
 break;
 case '+':
@@ -508,14 +508,14 @@ case g2: return("%g2");
 case g3: return("%g3");
 case g4: return("%g4");
 case g5: return("%g5");
-case g6: return("%g6"):
-case g7: return("%g7"):
-case o0: return("%o0"):
-case o1: return("%o1"):
-case o2: return("%o2"):
-case o3: return("%o3"):
-case o4: return("%o4"):
-case o5: return("%o5"):
+case g6: return("%g6");
+case g7: return("%g7");
+case o0: return("%o0");
+case o1: return("%o1");
+case o2: return("%o2");
+case o3: return("%o3");
+case o4: return("%o4");
+case o5: return("%o5");
 case o6: return("%o6");
 case o7: return("%o7");
 case l0: return("%l0");
