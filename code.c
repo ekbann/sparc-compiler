@@ -381,7 +381,7 @@ get_reg(p);
 }
 return;
 }
-if (!p-left->where)
+if (!p->left->where)
 load_reg(p->right);		/* load right if necessary */
 fprintf(fp, "\tst\t%s, [%s]\n", print_reg(p->right->where),
 	print_reg(p->left->where));
@@ -444,12 +444,13 @@ case LEAF:
 load_reg(p);
 break;
 default:
+break;
 }
 }
 void free_reg(struct entry *p)
 {
 reg_tbl[p->where].free = 1;
-if (p->e_type == e_var) { .
+if (p->e_type == e_var) {
 if (p->type.var.m_type == m_none)
 p->where = 0;
 else if (p->type.var.m_type == m_register)
@@ -599,6 +600,7 @@ case 96	: c = 96; break;   /* single quote */
 case '"': c = 34; break;   /* double quote */
 case 'x':
 default:   /* HEX and OCTAL not implemented */
+break;
 }
 fprintf(fp, "\tmov\t%d, %s",
 	c,
