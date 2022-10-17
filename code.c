@@ -92,7 +92,7 @@ void code(struct entry *p)
     code (p->left);
     code (p->right);
     break;
-  case Do: {
+  case DO: {
     char loop[6];
     fprintf(fp, "%s:\n", newlabel(loop, 'L'));
     code(p->left);
@@ -105,7 +105,7 @@ void code(struct entry *p)
   case WHILE: {
     char loop[6], test[6];
     newlabel(loop, 'L');
-    fprintf(fp, "\tba\t%s\n\tnop\n", newlabel(test, 'L'))
+    fprintf(fp, "\tba\t%s\n\tnop\n", newlabel(test, 'L'));
     fprintf(fp, "%s:\n", loop);
     code(p->right);
     fprintf(fp, "%s:\n", test);
@@ -188,7 +188,7 @@ free_reg(p->right);
 get_reg(p);
 fprintf(fp, ", %s\n", print_reg(p->where));
 }
-break:
+break;
 case DEF:
 code(p->left);    /* code the pointer */
 if (p->left->left->type.var.m_type == m_extern)
@@ -288,25 +288,25 @@ fprintf(fp, "%s:\n", lt);
 {
 break;
 case AND: {
-char 1[6]; /* label */
+char l[6]; /* label */
 code(p->left);
 fprintf(fp, "\ttst\t%s\n", print_reg(p->left->where));
-fprintf(fp, "\tbe\t%s\n", newlabel (1, 'L'));
+fprintf(fp, "\tbe\t%s\n", newlabel (l, 'L'));
 fprintf(fp, "\tclr\t%s\n", print_reg(p->left->where));
 free_reg(p->left);
 code(p->right);
 fprintf(fp, "\ttst\t%s\n", print_reg(p->right->where));
-fprintf(fp, "\tbe\t%s\n", 1);
+fprintf(fp, "\tbe\t%s\n", l);
 fprintf(fp, "\tclr\t%s\n", print_reg(p->right->where));
 free_reg(p->right);
-fprintf(fp, "\tmov\t1, %s\n%s:\n", print_reg(get_reg(p)), 1);
+fprintf(fp, "\tmov\t1, %s\n%s:\n", print_reg(get_reg(p)), l);
 }
 break;
 case OR: {
-char 1[6];	/* label */
+char l[6];	/* label */
 code(p->left);
 fprintf(fp, "\ttst\t%s\n", print_reg(p->left->where));
-fprintf(fp, "\tbne\t%s\n", newlabel (1, 'L'));
+fprintf(fp, "\tbne\t%s\n", newlabel (l, 'L'));
 fprintf(fp, "\tmov\t1, %s\n", print_reg (p->left->where));
 free_reg (p->left);
 code(p->right);
@@ -314,7 +314,7 @@ fprintf(fp, "\ttst\t%s\n", print_reg(p->right->where));
 fprintf(fp, "\tbne\t%s\n", 1);
 fprintf(fp, "\tmov\t1, %s\n", print_reg(p->right->where));
 free_reg(p->right);
-fprintf(fp, "\tclr\t%s\n%s:\n", print_reg(get_reg(p)), 1);
+fprintf(fp, "\tclr\t%s\n%s:\n", print_reg(get_reg(p)), l);
 }
 break;
 case EQUAL:
@@ -323,7 +323,7 @@ case GT:
 case GE:
 case LT:
 case LE: {
-char 1[6];
+char l[6];
 code(p->left);
 code(p->right);
 check_operands(p);
@@ -331,18 +331,18 @@ fprintf(fp, "\tcmp\t%s, %s\n", print_reg(p->left->where),
 	print_reg(p->right->where));
 free_reg(p->left);
 free_reg(p->right);
-fprintf(fp, "\t%s\t%s\n", inv_relop(p->node_type), newlabel(1, 'L'));
+fprintf(fp, "\t%s\t%s\n", inv_relop(p->node_type), newlabel(l, 'L'));
 fprintf(fp, "\tclr\t%s\n", print_reg(get_reg(p)));
-fprintf(fp, "\tmov\t1, %s\n%s:\n", print_reg(p->where), 1);
+fprintf(fp, "\tmov\t1, %s\n%s:\n", print_reg(p->where), l);
 }
 break;
 case '=': {
 code(p->right);		  /* evaluate what has to be stored */
-if (p-left-node_type == DEF) {       /* pointer expression? */
+if (p->left->node_type == DEF) {       /* pointer expression? */
 code (p->left->left);	  /* eval the expression */
-if (!p->right->where]	  /* if it got flushed */
+if (!p->right->where)	  /* if it got flushed */
 load_reg(p->right);	  /* load it */
-if (p-left->left->left->type.var.m_type == m_extern) /* extern array */
+if (p->left->left->left->type.var.m_type == m_extern) /* extern array */
 fprintf(fp, "\tst\t%s, [%s]\n",
 	print_reg(p->right->where),
 	print_reg(p->left->left->where));
@@ -351,24 +351,24 @@ fprintf(fp, "\tst\t%s, [%%fp+%s]\n",
 	print_reg(p->right->where),
 	print_reg(p->left->left->where));
 free_reg(p->right);
-get_reg)p);
+get_reg(p);
 free_reg(p->left->left);  /* don't need LVAL but keep RVAL */
 break;
 
 else {			/* must be a variable name */
-if (p-left-type.var.m_type == m_extern) { /* an external? */
+if (p->left->type.var.m_type == m_extern) { /* an external? */
 fprintf(fp, "\tset\t%s, %s\n", p->left->laxeme,
 	print_reg(get_reg(p->left)));
 fprintf(fp, "\tst\t%s, [%s]\n",
 	print_reg(p->right->where),
-	print reg(p-left->where});
-free regip->right);	/* I ADDED THIS. IS IT REQUIRED? */
-get_reg(p);
-free_regip->left);
-}
-else if (p-left->where( {		/* in a register */
-fprintf(fp, "\tmov\t%s\n", print_reg(p->right->where),
 	print_reg(p-left->where));
+free_reg(p->right);	/* I ADDED THIS. IS IT REQUIRED? */
+get_reg(p);
+free_reg(p->left);
+}
+else if (p->left->where) {		/* in a register */
+fprintf(fp, "\tmov\t%s\n", print_reg(p->right->where),
+	print_reg(p->left->where));
 free_reg(p->right);  /* I ADDED THIS. IS IT REQUIRED? */
 get_reg(p);
 }
@@ -384,7 +384,7 @@ return;
 if (!p-left->where)
 load_reg(p->right);		/* load right if necessary */
 fprintf(fp, "\tst\t%s, [%s]\n", print_reg(p->right->where),
-	print_reg(p-left->where));
+	print_reg(p->left->where));
 free_reg(p->right);
 get_reg(p);
 free reg(p->left);
@@ -416,7 +416,7 @@ case '*':
 case '/':
 case '%':
 flush_one_reg (8);	/* flush %o0 register */
-flush_one_reg (9);	/* flush %ol register */
+flush_one_reg (9);	/* flush %o1 register */
 flag_load = 1;		/* load REGISTER variables if encountered */
 code(p->left);		/* goes into %o0 */
 code(p->right);		/* goes into %o1 */
@@ -594,7 +594,7 @@ case 'r': c = 13; break;   /* carriage return */
 case 't': c = 9; break;    /* htab */
 case 'v': c = 11; break;   /* vtab */
 case 92	: c = 92; break;   /* backslash */
-case '"': c = 63; break;   /* question mark */
+case '?': c = 63; break;   /* question mark */
 case 96	: c = 96; break;   /* single quote */
 case '"': c = 34; break;   /* double quote */
 case 'x':
@@ -703,8 +703,8 @@ flush_one_reg(i);
 void free_outs()
 {
 int i;
-for (i=8; i<=13; i++). {
-if (!reg)tbl[i].free) {
+for (i=8; i<=13; i++) {
+if (!reg_tbl[i].free) {
 reg_tbl[i].free = 1;
 if (reg_tbl[i].node->e_type == e_var) {
 if (reg_tbl[i].node->type.var.m_type == m_none)
@@ -715,12 +715,13 @@ reg_tbl[i].node->where = reg_tbl[i].node->type.var.reg;
 }
 }
 }
+
 char * newlabel(char* label, char head)
 {
 static unsigned tails [128];	/* one for each ASCII char, last tail */
 register char * p = label;	/* save pointer to label to return */
 
-*label++= head;			/* start with head char */
+*label++ = head;			/* start with head char */
 sprintf(label, "%04d", ++tails[head]); /* create new tail */
 label [5] = '\0';		/* add null */
 return p;			/* points to label */
