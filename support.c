@@ -38,7 +38,7 @@ struct entry * insert(int token, char *lexeme, int scope)
 
   /* link every entry within the same context level in context[] */
 
-  lexptr->scope_link = context (scope);
+  lexptr->scope_link = context[scope];
   context[scope] = lexptr;
 
   /* have to copy the lexeme itself as well and fill in info */
@@ -106,7 +106,7 @@ struct entry * lookup(char *lexeme)
   return NULL;	     /* not found */
 }
 
-struct entry * make_node(int n_type, struct entry *1, struct entry *r)
+struct entry * make_node(int n_type, struct entry *l, struct entry *r)
 {
   struct entry *node;
 
@@ -114,17 +114,17 @@ struct entry * make_node(int n_type, struct entry *1, struct entry *r)
   node->lexeme = NULL;
   node->node_type = n_type;
   node->linenum = linenum;
-  node->left = 1;
+  node->left = l;
   node->right = r;
   node->e_type = e_unknown;
   node->t_type = t_unknown;
   node->c_type = c_unknown;
   if (node_dump) {
     printf("\nnode_type: %s [%d]\n", print_n_type(n_type), node);
-    if (1 && (1->node_type == LEAF))
-      printf("	left:	LEAF [%d]\n", 1);
+    if (l && (l->node_type == LEAF))
+      printf("	left:	LEAF [%d]\n", l);
     else
-      printf("	left:	NODE [%d]\n", 1);
+      printf("	left:	NODE [%d]\n", l);
     if (r && (r->node_type == LEAF))
       printf("	right:	LEAF [%d]\n", r);
     else
@@ -148,16 +148,16 @@ int bucket;
 
 while (item) {
 bucket =  hashpjw(item->lexeme);        /* retrieve bucket location of entry    */
-hashtbl [bucket] = item->hash_link;     /* unlink first entry of bucket list    */
+hashtbl[bucket] = item->hash_link;     /* unlink first entry of bucket list    */
 item =  item->scope_link;               /* point to next item in same level     */
 }
-context(context_level] = NULL;           /* now an empty list                   */
+context[context_level] = NULL;           /* now an empty list                   */
 context_level--;                         /* a context level has been deleted    */
 }
 int level= 0; 			/* indentation level for statement dump		*/
 int loop_body = FALSE;		/* if inside DO/WHILE loop body, STATEMENT	*/
                                 /* nodes doesn't get indented to column 0,	*/                                     
-int loop_indent			/* it gets indented to this column		*/
+int loop_indent;			/* it gets indented to this column		*/
 
 void syntax_tree_dump(struct entry *node)
 {
@@ -169,13 +169,14 @@ if ((n_type == DO)  || (n_type == WHILE) ) {
 loop_body = TRUE;
 loop_indent = level;
 }
-if ((n_type == STATEMENT) {
+if (n_type == STATEMENT) {
 putchar('\n');
 if(!loop_body)
 level--;
 else
-level = loop_indent;}
+level = loop_indent;
 }
+
 else {
 if (n_type != LEAF) {
 for (i=level; i>0; i--)
@@ -208,6 +209,7 @@ if ((n_type == DO) || (n_type == WHILE))
 loop_body= FALSE;
 }
 }
+
 void symtab_dump(void)
 {
 int bucket;
@@ -246,7 +248,7 @@ printf(" <\"%s\" ", fn_parms->lexeme);
 printf("scope %d, ", fn_parms->scope);
 printf("%s, ", print_e_type(fn_parms->e_type));
 printf("%s, ", print_t_type(fn_parms->t_type));
-printf("%s, ", print_c_type(fn parms->c_type));
+printf("%s, ", print_c_type(fn_parms->c_type));
 printf("width %d>\n", fn_parms->type.var.width);
 fn_parms = fn_parms->fn_parms;
 }
@@ -274,7 +276,7 @@ case '=': return("=");
 case '+': return("+");
 case '-': return("-");
 case '*': return("*");
-case '/'  return("/");
+case '/': return("/");
 case '%': return("%");
 case '&': return("&");
 case '!': return("!");
@@ -337,7 +339,7 @@ default: return("e_invalid");
 }
 void debug(char *text)
 {
-if (toke_listing)
+if (token_listing)
 printf("%d: <%s,>\n",linenum, text);
 }
 void debug_entry(int token, char *lexeme)
@@ -368,7 +370,7 @@ printf("\t%d floating constants\n", num_float);
 printf("\t%d integer constants\n", num_int);
 printf("\t%d character constants\n", num_char);
 printf("\t%d string constants\n", num_string);
-printf("\nTotal number of illegal symbols: %d\n", num illegal);
+printf("\nTotal number of illegal symbols: %d\n", num_illegal);
 printf("\nTotal number of lookups: %d\n", num_lookup);
 printf("Total number of entries searched: %d\n", num_searched);
 printf("Hash table efficiency: %.2f (entries searched per lookup) \n",
@@ -376,7 +378,7 @@ printf("Hash table efficiency: %.2f (entries searched per lookup) \n",
 }
 void check(struct entry *p)
 {
-struct entry *next, *1, *r;
+struct entry *next, *l, *r;
 if (!p)
 return;
 else if (p->lexeme) {
@@ -384,7 +386,7 @@ if (p->t_type == t_char && p->c_type == c_scalar)
 p->t_type = t_int;	/* promote chars to int */
 /*  if (p->c_type == c_array) { */
 if (p->token == SCON) {
-p->_type = c_pointer;
+p->c_type = c_pointer;
 p->e_type = e_const;	/* SCON but array is e_var */
 }
 }
@@ -393,52 +395,52 @@ check (l = p->left);
 check (r= p->right);
 switch (p->node_type) {
 case STATEMENT: break;
-case RETURN: return_op(p, 1); break;
-case CALL: call_op(p, 1, r); break;
-case X4: x4_op(p, 1); break;
-case ARRAY: array_op(p, 1, r); break;
-case DEF: def_op(p, 1); break;
-case '+' : case '-': plus_minus_op(p, 1, r); break;
-case '*' : case '/': mul_div_op(p, 1, r); break;
-case '%' : mod_op(p, 1, r); break;
-case '=' : assignment_op(p, 1, r); break;
-case '!' : not_op(p, 1); break;
-case '&' : address_op(p, 1); break;
-case  INC: case DEC: inc_dec_op(p, 1); break;
+case RETURN: return_op(p, l); break;
+case CALL: call_op(p, l, r); break;
+case X4: x4_op(p, l); break;
+case ARRAY: array_op(p, l, r); break;
+case DEF: def_op(p, l); break;
+case '+' : case '-': plus_minus_op(p, l, r); break;
+case '*' : case '/': mul_div_op(p, l, r); break;
+case '%' : mod_op(p, l, r); break;
+case '=' : assignment_op(p, l, r); break;
+case '!' : not_op(p, l); break;
+case '&' : address_op(p, l); break;
+case  INC: case DEC: inc_dec_op(p, l); break;
 case EQUAL: case NOT_EQUAL: case LT: case LE: case GT: case GE:
-relational_op(p, 1, r); break;
-case AND: case OR: logical_op(p, 1, r); break;
+relational_op(p, l, r); break;
+case AND: case OR: logical_op(p, l, r); break;
 }
 }
 }
-x4_op(struct entry *p, struct entry *1)
+x4_op(struct entry *p, struct entry *l)
 {
-   if 	(1->t_type == t_int) { 
+   if 	(l->t_type == t_int) { 
 	p->e_type = e_var;
-	p->t_type = 1->t_type;
+	p->t_type = l->t_type;
 	p->c_type = c_pointer;
 	return;
 }
 else type_error(p->linenum);
 }
-def_op(struct entry *p, struct entry *1)
+def_op(struct entry *p, struct entry *l)
 {
-if (1->c_type == c_pointer) {
+if (l->c_type == c_pointer) {
 p->e_type = e_var;
-if (1->t_type == t_char)
+if (l->t_type == t_char)
 p->t_type = t_int;
 else
-p->t_type = 1->t_type;
+p->t_type = l->t_type;
 p->c_type = c_scalar;	/* not sure this is correct */
 return;
 }
 else type_error(p->linenum);
 }
-array_op(struct entry *p, struct entry *1, struct entry *r)
+array_op(struct entry *p, struct entry *l, struct entry *r)
 {
 if (r->t_type != t_int) 	/* array index is not an INT */
 type_error(p->linenum);
-if (1->type.var.width == 4) {
+if (l->type.var.width == 4) {
 p->right = make_node(X4, r, NULL);
 p->right->e_type = r->e_type;
 p->right->t_type = t_int;	/* has to be an int */
@@ -446,13 +448,13 @@ p->right->c_type = r->c_type;
 	/* MAYBE I should force it to c_scalar */
 }
 p->e_type = e_var;
-p->t_type = 1->t_type;
+p->t_type = l->t_type;
 p->c_type = c_pointer;
 }
 
-mod_op(struct entry *p, struct entry *1, struct entry *r)
+mod_op(struct entry *p, struct entry *l, struct entry *r)
 {
-if (1->t_type == t_int && r->t_type == t_int) {
+if (l->t_type == t_int && r->t_type == t_int) {
 p->e_type = e_var;
 p->t_type = t_int;
 p->c_type = c_scalar; 	/* is this right? */
@@ -460,16 +462,16 @@ return;
 }
 else type_error(p->linenum);
 }
-call_op(struct entry *p, struct entry *1, struct entry *r)
+call_op(struct entry *p, struct entry *l, struct entry *r)
 {
 struct entry *fn_parms;	   /* pointer for function parameters */
 
 p->e_type = e_var;
-p->t_type = 1->t_type;
-p->c_type = 1->c_type;
+p->t_type = l->t_type;
+p->c_type = l->c_type;
 /* PARAMETER function parameters --> STATEMENT assignment_ops */
-fn_parms = 1->type.fn.parameters; 	/* linked list of fn parameters */
-while (fn parms) {
+fn_parms = l->type.fn.parameters; 	/* linked list of fn parameters */
+while (fn_parms) {
 if (r) {		/* if not NULL, then it is PARAMETER */
 r->node_type = STATEMENT;
 fn_parms->node_type = LEAF;		/* assign node type */
@@ -486,23 +488,23 @@ if (r) type_error(p->linenum);			/* still more CALL parms */
 return;
 }
 
-return_op(struct entry *p, struct entry *1)
+return_op(struct entry *p, struct entry *l)
 {
 p->e_type = e_var;		/* make sure RETURN has same type as function */
 p->t_type = fn_p->t_type;
 p->c_type = fn_p->c_type;
-if (p->t_type == 1->t_type && p->c_type == 1->_type)
+if (p->t_type == l->t_type && p->c_type == l->c_type)
 return; 	/* everything checks out */
-else if (p->c_type == c_scalar && 1->c_type == c_scalar) {
-if (p->t_type == t_int && 1->t_type == t_float) {
-p->left = make_node(FTOI, 1, NULL);
+else if (p->c_type == c_scalar && l->c_type == c_scalar) {
+if (p->t_type == t_int && l->t_type == t_float) {
+p->left = make_node(FTOI, l, NULL);
 p->left->e_type = e_var;
 p->left->t_type = t_int;
 p->left->c_type = c_scalar;
 return;
 }
-else if (p->t_type == t_float && 1->t_type == t_int) {
-p->left = make_node(ITOF, 1, NULL);
+else if (p->t_type == t_float && l->t_type == t_int) {
+p->left = make_node(ITOF, l, NULL);
 p->left->e_type = e_var;
 p->left->t_type = t_float;
 p->left->c_type = c_scalar;
@@ -512,13 +514,13 @@ else type_error(p->linenum);
 }
 else type_error(p->linenum)
 }
-address_op(struct entry *p, struct entry *1)
+address_op(struct entry *p, struct entry *l)
 {
-if ((1->e_type == e_var && 1->type.var.m_type != m_register) | |
-1->e_type == e_fn) {
+if ((l->e_type == e_var && l->type.var.m_type != m_register) ||
+l->e_type == e_fn) {
 p->e_type = e_var;
 p->c_type = c_pointer;
-if ((1->node_type == DEF) && (1->left->node_type == ARRAY))
+if ((l->node_type == DEF) && (l->left->node_type == ARRAY))
 p->left = p->left->left; 	/* skip de-referencing to ARRAY */
 p->t_type = p->left->t_type;
 return;
@@ -526,20 +528,20 @@ return;
 else type_error(p->linenum);
 }
 
-inc_dec_op(struct entry *p, struct entry *1)
+inc_dec_op(struct entry *p, struct entry *l)
 {
-if (1->e_type == e_var) {
+if (l->e_type == e_var) {
 p->e_type = e_var;
-p->t_type = 1->t_type;
-p->c_type = 1->c_type;
+p->t_type = l->t_type;
+p->c_type = l->c_type;
 return;
 }
 else type_error(p->linenum);
 }
 
-logical_op(struct entry *p, struct entry *1, struct entry *r)
+logical_op(struct entry *p, struct entry *l, struct entry *r)
 {
-if ((1->t_type == t_int || 1->t_type == t_float) &&
+if ((l->t_type == t_int || l->t_type == t_float) &&
 (r->t_type == t_int 	|| r->t_type == t_float)) {
 p->e_type = e_var;
 p->t_type = t_int;
@@ -548,16 +550,16 @@ return;
 }
 else type_error(p->linenum);
 }
-relational_op(struct entry *p, struct entry *1, struct entry *r)
+relational_op(struct entry *p, struct entry *l, struct entry *r)
 {
-if (1->t_type == r->t_type && (1->t_type == t_int || 1->t_type == t_float)) {
+if (l->t_type == r->t_type && (l->t_type == t_int || l->t_type == t_float)) {
 p->e_type = e_var;
 p->t_type = t_int;
 p->c_type = c_scalar;
 return;
 }
-else if (1->t_type == t_int && r->t_type == t_float) {
-p->left = make_node(ITOF, 1, NULL);
+else if (l->t_type == t_int && r->t_type == t_float) {
+p->left = make_node(ITOF, l, NULL);
 p->left->t_type = t_float;
 p->left->c_type = c_scalar;
 p->left->e_type = e_var;
@@ -566,8 +568,8 @@ p->t_type = t_int;
 p->c_type = c_scalar;
 return;
 }
-else if (1->t_type == t_int && r->t_type == t_float) {
-p->left = make_node(ITOF, 1, NULL);
+else if (l->t_type == t_int && r->t_type == t_float) {
+p->left = make_node(ITOF, l, NULL);
 p->left->t_type = t_float;
 p->left->c_type = c_scalar;
 p->left->e_type = e_var;
@@ -579,9 +581,9 @@ return;
 else type_error(p->linenum);
 }
 
-not_op(struct entry *p, struct entry *1)
+not_op(struct entry *p, struct entry *l)
 {
-if (1->t_type == t_int || 1->t_type == t_float) {
+if (l->t_type == t_int || l->t_type == t_float) {
 p->e_type = e_var;
 p->t_type = t_int;
 p->c_type = c_scalar;
@@ -589,18 +591,18 @@ return;
 }
 else type_error(p->linenum);
 }
-assignment_op(struct entry *p, struct entry *1, struct entry *r)
+assignment_op(struct entry *p, struct entry *l, struct entry *r)
 {
-if (1->e_type != e_var)    /* must be lvalue */
+if (l->e_type != e_var)    /* must be lvalue */
 type_error(p->linenum);
-else if (1->t_type == r->t_type && 1->c_type == r->c_type) {
+else if (l->t_type == r->t_type && l->c_type == r->c_type) {
 p->e_type = e_var;		/* does it matter? */
-p->t_type = 1->t_type;
-p->c_type = 1->c_type;
+p->t_type = l->t_type;
+p->c_type = l->c_type;
 return;
 }
-else if (1->_type == c_scalar && r->c_type == c_scalar) {
-if (1->t_type == t_int && r->t_type == t_float) {
+else if (l->_type == c_scalar && r->c_type == c_scalar) {
+if (l->t_type == t_int && r->t_type == t_float) {
 p->right = make_node (FTOI, r, NULL);
 p->right->e_type = e_var; 
 p->right->t_type = t_int;
@@ -610,7 +612,7 @@ p->t_type = t_int;
 p->c_type = c_scalar;
 return;
 }
-if (1->t_type == t_float && r->t_type == t_int) {
+if (l->t_type == t_float && r->t_type == t_int) {
 p->right = make_node(ITOF, r, NULL);
 p->right->e_type = e_var;
 p->right->t_type = t_float;
@@ -625,52 +627,52 @@ else type_error(p->linenum);
 else type_error(p->linenum);
 }
 
-plus_minus_op(struct entry *p, struct entry *1, struct entry *r)
+plus_minus_op(struct entry *p, struct entry *l, struct entry *r)
 {
 if (!p->right) {	/* it is unary minus or unary plus */
-if (1->t_type == t_int || 1->t_type == t_float) {    
-	p->e_type = 1->e_type;
-	p->t_type = 1->t_type;
-	p->c_type = 1->c_type;
+if (l->t_type == t_int || l->t_type == t_float) {    
+	p->e_type = l->e_type;
+	p->t_type = l->t_type;
+	p->c_type = l->c_type;
 	return;
       }
       else type_error(p->linenum);
     }
-    else if (1->t_type == r->t_type && 1->c_type == r->c_type) {
+    else if (l->t_type == r->t_type && l->c_type == r->c_type) {
       p->e_type = e_var;
-      p->t_type = 1->t_type;
-      p->c_type = 1->c_type;
+      p->t_type = l->t_type;
+      p->c_type = l->c_type;
       return;
     }
-    else if (1->t_type == r->t_type && 1->c_type == r->c_type) {
+    else if (l->t_type == r->t_type && l->c_type == r->c_type) {
       p->e_type = e_var;
-      p->t_type = 1->t_type;
-      p->c_type = 1->c_type;
+      p->t_type = l->t_type;
+      p->c_type = l->c_type;
       return;
     }
-    else if (1->t_type == r->t_type &&
-	     (1->t_type == t_int || 1->t_type == t_float) &&
-	     ((1->c_type == c_scalar || 1->c_type == c_pointer) &&
+    else if (l->t_type == r->t_type &&
+	     (l->t_type == t_int || l->t_type == t_float) &&
+	     ((l->c_type == c_scalar || l->c_type == c_pointer) &&
 	      (r->c_type == c_scalar || r->c_type == c_pointer))) {
       p->e_type = e_var;
-      p->t_type = 1->t_type;
-      p->c_type = 1->c_type;
+      p->t_type = l->t_type;
+      p->c_type = l->c_type;
       return;
     }
-    else if (1->c_type == c_pointer && r->t_type == t_int) {
+    else if (l->c_type == c_pointer && r->t_type == t_int) {
       if (l->t_type != t_char} {
 	p->right = make_node(X4, r, NULL);
 	p->right->e_type = e_var;
-	p->right->t_type = 1->t_type;
+	p->right->t_type = l->t_type;
 	p->right->c_type = c_pointer;
       }
       p->e_type = e_var;
-      p->t_type = 1->t_type;
+      p->t_type = l->t_type;
       p->c_type = c_pointer;
       return;
    }
-   else if (1->t_type == t_int && r->t_type == t_float) {
-     p->left = make_node (ITOF, 1, NULL);
+   else if (l->t_type == t_int && r->t_type == t_float) {
+     p->left = make_node (ITOF, l, NULL);
      p->left->t_type = t_float;
      p->left->c_type = c_scalar;
      p->left->e_type = e_var;
@@ -702,30 +704,30 @@ mul_div_op(struct entry *p, struct entry *l, struct entry *r)
 	*float						*/
 
   if (!p->right) {	/* it is an indirection op */
-    if (1->c_type == c_pointer) {
+    if (l->c_type == c_pointer) {
       p->node_type = DEF;
       p->e_type = e_var;
-      if (1->t_type == t_char)
+      if (l->t_type == t_char)
 	p->t_type = t_int;
       else
-	p->t_type = 1->t_type;
+	p->t_type = l->t_type;
       p->c_type = c_scalar;	/* not sure this is correct */
       return;
     }
     else type_error(p->linenum);
   }
-  if (l->t_type == r->t_type && (1->t_type == t_int || 1->t_type == t_float) &&
-      ((1->c_type == c_scalar || 1->c_type == c_pointer) &&
+  if (l->t_type == r->t_type && (l->t_type == t_int || l->t_type == t_float) &&
+      ((l->c_type == c_scalar || l->c_type == c_pointer) &&
        (r->c_type == c_scalar || r->c_type == c_pointer))) {
     p->e_type = e_var;
-    p->t_type = 1->t_type;
-    p->c_type = 1->c_type;
+    p->t_type = l->t_type;
+    p->c_type = l->c_type;
     return;
   }
-  else if (1->c_type != c_scalar || r->c_type != c_scalar)
+  else if (l->c_type != c_scalar || r->c_type != c_scalar)
     type_error (p->linenum);
-  else if (1->t_type == t_int && r->t_type == t_float) {
-    p->left = make_node (ITOF, 1, NULL);
+  else if (l->t_type == t_int && r->t_type == t_float) {
+    p->left = make_node (ITOF, l, NULL);
     p->left->t_type = t_float;
     p->left->c_type = c_scalar;
     p->left->e_type = e_var;
@@ -734,7 +736,7 @@ mul_div_op(struct entry *p, struct entry *l, struct entry *r)
     p->c_type = c_scalar;
     return;
   }
-  else if (r->t_type == t_int && 1->t_type == t_float) {
+  else if (r->t_type == t_int && l->t_type == t_float) {
     p->right = make_node(ITOF, r, NULL);
     p->right->t_type = t_float;
     p->right->c_type = c_scalar;

@@ -1,4 +1,4 @@
-objects = CC.tab.o lex.yy.o support.o code.o 
+
 
 
 clean:

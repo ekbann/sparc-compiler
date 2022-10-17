@@ -1,5 +1,6 @@
 /*** globals.h ***/
 
+#include <stdlib.h>     /* for malloc() used in support.c */
 #include <stdio.h>		/* standard i/o */
 #include <ctype.h>		/* character test routines */
 
