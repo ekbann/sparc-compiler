@@ -512,7 +512,7 @@ return;
 }
 else type_error(p->linenum);
 }
-else type_error(p->linenum)
+else type_error(p->linenum);
 }
 address_op(struct entry *p, struct entry *l)
 {
@@ -601,7 +601,7 @@ p->t_type = l->t_type;
 p->c_type = l->c_type;
 return;
 }
-else if (l->_type == c_scalar && r->c_type == c_scalar) {
+else if (l->c_type == c_scalar && r->c_type == c_scalar) {
 if (l->t_type == t_int && r->t_type == t_float) {
 p->right = make_node (FTOI, r, NULL);
 p->right->e_type = e_var; 
