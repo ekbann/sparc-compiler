@@ -1,5 +1,6 @@
 /*** globals.h ***/
 
+#include <string.h>     /* for strcpy() used in CC.y */
 #include <stdlib.h>     /* for malloc() used in support.c */
 #include <stdio.h>		/* standard i/o */
 #include <ctype.h>		/* character test routines */
