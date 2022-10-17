@@ -2,8 +2,8 @@ all:
 	bison -d CC.y
 	flex CC.l
 	gcc -g lex.yy.c -c
-	gcc -g support.c -c 2>log
-
+	gcc -g support.c -c
+	gcc -g code.c -c 2> log
 
 clean:
 	rm CC.tab.c
