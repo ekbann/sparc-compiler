@@ -215,12 +215,12 @@ void symtab_dump(void)
 int bucket;
 struct entry *lexptr;
 struct entry *fn_parms;	/* pointer used to print function parameters	*/
-enum entry type et;	/* if e_type = e_fn then print (fn_parameters) */
+enum entry_type et;	/* if e_type = e_fn then print (fn_parameters) */
 
 printf("\n*** SYMBOL TABLE DUMP, e_<entry type>, t_<variable type>, ");
 printf("c_<constructor type>\n\n");
 for (bucket = PRIME-1; bucket >= 0; bucket--) {
-lexptr hashtbl [bucket];
+lexptr = hashtbl [bucket];
 if (lexptr != 0) {
 printf("bucket %d\n", bucket);
 for(; lexptr; lexptr = lexptr->hash_link) {
@@ -660,7 +660,7 @@ if (l->t_type == t_int || l->t_type == t_float) {
       return;
     }
     else if (l->c_type == c_pointer && r->t_type == t_int) {
-      if (l->t_type != t_char} {
+      if (l->t_type != t_char) {
 	p->right = make_node(X4, r, NULL);
 	p->right->e_type = e_var;
 	p->right->t_type = l->t_type;
