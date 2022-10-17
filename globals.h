@@ -72,7 +72,12 @@ struct entry *node;	/* what is in this register? */
 /* define a hash table of buckets where each bucket represents the start */
 /* of an individual symbol table, i.e. a linked list of lexemes. 	 */
 
-extern struct entry *hashtbl [1];
+extern struct entry *hashtbl [];
+
+/* define a context table of linked lists of entries within the same */
+/* context level */
+
+extern struct entry *context[];
 
 /* define a syntax tree which is the root of the entire program statements */
 
