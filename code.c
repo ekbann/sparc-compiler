@@ -311,7 +311,7 @@ fprintf(fp, "\tmov\t1, %s\n", print_reg (p->left->where));
 free_reg (p->left);
 code(p->right);
 fprintf(fp, "\ttst\t%s\n", print_reg(p->right->where));
-fprintf(fp, "\tbne\t%s\n", 1);
+fprintf(fp, "\tbne\t%s\n", l);
 fprintf(fp, "\tmov\t1, %s\n", print_reg(p->right->where));
 free_reg(p->right);
 fprintf(fp, "\tclr\t%s\n%s:\n", print_reg(get_reg(p)), l);
