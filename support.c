@@ -667,7 +667,7 @@ else if (l->t_type == r->t_type && l->c_type == r->c_type) {
     }
     else if (r->c_type == c_pointer && l->t_type == t_int) {
       if (r->t_type != t_char) {
-	p->left = make_node(X4, r, NULL);
+	p->left = make_node(X4, l, NULL);
 	p->left->e_type = e_var;
 	p->left->t_type = r->t_type;
 	p->left->c_type = c_pointer;
