@@ -638,22 +638,16 @@ if (l->t_type == t_int || l->t_type == t_float) {
       }
       else type_error(p->linenum);
     }
-    else if (l->t_type == r->t_type && l->c_type == r->c_type) {
-      p->e_type = e_var;
-      p->t_type = l->t_type;
-      p->c_type = l->c_type;
-      return;
-    }
-    else if (l->t_type == r->t_type && l->c_type == r->c_type) {
-      p->e_type = e_var;
-      p->t_type = l->t_type;
-      p->c_type = l->c_type;
-      return;
-    }
+else if (l->t_type == r->t_type && l->c_type == r->c_type) {
+  p->e_type = e_var;
+  p->t_type = l->t_type;
+  p->c_type = l->c_type;
+  return;
+}
     else if (l->t_type == r->t_type &&
-	     (l->t_type == t_int || l->t_type == t_float) &&
-	     ((l->c_type == c_scalar || l->c_type == c_pointer) &&
-	      (r->c_type == c_scalar || r->c_type == c_pointer))) {
+        (l->c_type == t_int || l->t_type == t_float) &&
+        ((l->c_type == c_scalar || l->c_type == c_pointer) &&
+         (r->c_type == c_scalar || r->c_type == c_pointer))) {
       p->e_type = e_var;
       p->t_type = l->t_type;
       p->c_type = l->c_type;
@@ -661,13 +655,25 @@ if (l->t_type == t_int || l->t_type == t_float) {
     }
     else if (l->c_type == c_pointer && r->t_type == t_int) {
       if (l->t_type != t_char) {
-	p->right = make_node(X4, r, NULL);
-	p->right->e_type = e_var;
-	p->right->t_type = l->t_type;
-	p->right->c_type = c_pointer;
+        p->right = make_node(X4, r, NULL);
+        p->right->e_type = e_var;
+        p->right->t_type = l->t_type;
+        p->right->c_type = c_pointer;
       }
       p->e_type = e_var;
       p->t_type = l->t_type;
+      p->c_type = c_pointer;
+      return;
+    }
+    else if (r->c_type == c_pointer && l->t_type == t_int) {
+      if (r->t_type != t_char) {
+	p->left = make_node(X4, r, NULL);
+	p->left->e_type = e_var;
+	p->left->t_type = r->t_type;
+	p->left->c_type = c_pointer;
+      }
+      p->e_type = e_var;
+      p->t_type = r->t_type;
       p->c_type = c_pointer;
       return;
    }
