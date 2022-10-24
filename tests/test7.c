@@ -1,4 +1,4 @@
-int printf(char *fmt, int a, intb);
+int printf(char *fmt, int a, int b);
 
 void main() {
   int a, b;
