@@ -652,7 +652,7 @@ if (reg_tbl[i].node->e_type == e_var) {
 if (reg_tbl[i].node->type.var.m_type == m_none) {
 fprintf(fp, "\tst\t%s, [%%fp%d]",
 	print_reg(reg_tbl[i].node->where),
-	reg_tbl[1].node->type.var.offset);
+	reg_tbl[i].node->type.var.offset);
 if (comment)
 fprintf(fp, "\t\t! flushing %%o%d register (%s)",
 	i-8, reg_tbl[i].node->lexeme);
