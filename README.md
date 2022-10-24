@@ -18,15 +18,17 @@ Understand the architecture of a RISC machine, specifically a Sun SPARCstation 5
 Summary of the important aspects of my compiler:
 
 * All `external_decls` are assigned `modifier` type `EXTERN` unless specifically defined in the source code.
-* I added a new debug directive, 'debug(node_dump_on)' and its counterpart 'debug(node_dump_off)', which keeps track of the creation of new syntax tree nodes. The output format of a sample node is:
+* I added a new debug directive, `debug(node_dump_on)` and its counterpart `debug(node_dump_off)`, which keeps track of the creation of new syntax tree nodes. The output format of a sample node is:
 
-```    node_type: = [104576]
+```   
+    node_type: = [104576]
          left:   LEAF [106304]
-        right:   NODE [104640]```
+        right:   NODE [104640]
+```
 
-The number in square brackets is a pointer to that specific node. At the end of parsing the source code, this directive outputs the pointer to the 'ROOT' of the program syntax tree, e.g.
+The number in square brackets is a pointer to that specific node. At the end of parsing the source code, this directive outputs the pointer to the `ROOT` of the program syntax tree, e.g.
 
-    syntax tree root = [138368]
+    `syntax tree root = [138368]`
 
 This allows the user to manually reconstruct the syntax tree to verify if the syntax tree was constructed properly. Another simpler way is to use the directive `debug(statement_dump)`.
 
