@@ -9,6 +9,6 @@ void sort(int n) {
       for (j = i - gap; j >= 0 && ary[j] > ary[j + gap]; j = j - gap) {
         temp = ary[j];
         ary[j] = ary[j + gap];
-        ary[j + gap] = temp
+        ary[j + gap] = temp;
       }
 }
