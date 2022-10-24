@@ -617,9 +617,9 @@ p->right = make_node(ITOF, r, NULL);
 p->right->e_type = e_var;
 p->right->t_type = t_float;
 p->right->c_type = c_scalar;
-p->right = e_var;
-p->right = t_float;
-p->right = c_scalar;
+p->e_type = e_var;
+p->t_type = t_float;
+p->c_type = c_scalar;
 return;
 }
 else type_error(p->linenum);
