@@ -367,7 +367,7 @@ get_reg(p);
 free_reg(p->left);
 }
 else if (p->left->where) {		/* in a register */
-fprintf(fp, "\tmov\t%s\n", print_reg(p->right->where),
+fprintf(fp, "\tmov\t%s, %s\n", print_reg(p->right->where),
 	print_reg(p->left->where));
 free_reg(p->right);  /* I ADDED THIS. IS IT REQUIRED? */
 get_reg(p);
