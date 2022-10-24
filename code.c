@@ -616,7 +616,7 @@ fprintf(fp, "\tmov\t%d, %s\n",
 }
 else if (p->e_type == e_var) {
 if (p->type.var.m_type == m_none) {
-fprintf(fp, "\tld\t [%%fp%d], %s",
+fprintf(fp, "\tld\t[%%fp%d], %s",
 	p->type.var.offset,
 	print_reg(r = get_reg (p)));
 if (comment)
