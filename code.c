@@ -23,7 +23,7 @@ void init_reg_tbl()
   for (i=0; i<=32; i++)
     reg_tbl[i].free = 0;	/* make all registers not available */
   for (i=16; i<=23; i++)
-    reg_tbl[i].free = 1;	/* make %10-17 available */
+    reg_tbl[i].free = 1;	/* make %l0-l7 available */
   for (i=8; i<=13; i++)
     reg_tbl[i].free = 1;	/* make %o0-o5 available */
   for (i=24; i<=29; i++)
@@ -494,7 +494,7 @@ if (reg_tbl[i].free) {
 reg_tbl[i].free = 0;	/* no longer available */
 reg_tbl[i].node = p;	/* being used by p */
 p->where = i;		/* indicate in symbol entry */
-return 1;
+return i;
 }
 flush_regs();		/* no more out registers; flush it */
 return get_reg (p);	/* return a fresh out register */
