@@ -496,7 +496,7 @@ x4_op(struct entry *p, struct entry *l) {
     p->c_type = c_pointer;
     return;
   } else
-    type_error(p->linenum);
+    type_error(p->linenum,"x4_op");
 }
 def_op(struct entry *p, struct entry *l) {
   if (l->c_type == c_pointer) {
@@ -508,11 +508,11 @@ def_op(struct entry *p, struct entry *l) {
     p->c_type = c_scalar; /* not sure this is correct */
     return;
   } else
-    type_error(p->linenum);
+    type_error(p->linenum,"def_op");
 }
 array_op(struct entry *p, struct entry *l, struct entry *r) {
   if (r->t_type != t_int) /* array index is not an INT */
-    type_error(p->linenum);
+    type_error(p->linenum,"array_op");
   if (l->type.var.width == 4) {
     p->right = make_node(X4, r, NULL);
     p->right->e_type = r->e_type;
@@ -532,7 +532,7 @@ mod_op(struct entry *p, struct entry *l, struct entry *r) {
     p->c_type = c_scalar; /* is this right? */
     return;
   } else
-    type_error(p->linenum);
+    type_error(p->linenum,"mod_op");
 }
 call_op(struct entry *p, struct entry *l, struct entry *r) {
   struct entry *fn_parms; /* pointer for function parameters */
@@ -550,12 +550,12 @@ call_op(struct entry *p, struct entry *l, struct entry *r) {
       /* must type check the parameters */
       assignment_op(r->left, r->left->left, r->left->right);
     } else /* encountered NULL before function got all parms needed */
-      type_error(p->linenum);
+      type_error(p->linenum,"call_op: not enough parameters");
     fn_parms = fn_parms->fn_parms; /* check next function parameter */
     r = r->right;                  /* move to next call parameter */
   }
   if (r)
-    type_error(p->linenum); /* still more CALL parms */
+    type_error(p->linenum,"call_op: too much parameters"); /* still more CALL parms */
   return;
 }
 
@@ -579,9 +579,9 @@ return_op(struct entry *p, struct entry *l) {
       p->left->c_type = c_scalar;
       return;
     } else
-      type_error(p->linenum);
+      type_error(p->linenum,"return_op: return type not INT or FLOAT");
   } else
-    type_error(p->linenum);
+    type_error(p->linenum,"return_op: unknown return type");
 }
 address_op(struct entry *p, struct entry *l) {
   if ((l->e_type == e_var && l->type.var.m_type != m_register) ||
@@ -593,7 +593,7 @@ address_op(struct entry *p, struct entry *l) {
     p->t_type = p->left->t_type;
     return;
   } else
-    type_error(p->linenum);
+    type_error(p->linenum,"address_op");
 }
 
 inc_dec_op(struct entry *p, struct entry *l) {
@@ -603,7 +603,7 @@ inc_dec_op(struct entry *p, struct entry *l) {
     p->c_type = l->c_type;
     return;
   } else
-    type_error(p->linenum);
+    type_error(p->linenum,"inc_dec_op");
 }
 
 logical_op(struct entry *p, struct entry *l, struct entry *r) {
@@ -614,7 +614,7 @@ logical_op(struct entry *p, struct entry *l, struct entry *r) {
     p->c_type = c_scalar;
     return;
   } else
-    type_error(p->linenum);
+    type_error(p->linenum,"logical_op");
 }
 relational_op(struct entry *p, struct entry *l, struct entry *r) {
   if (l->t_type == r->t_type && (l->t_type == t_int || l->t_type == t_float)) {
@@ -641,7 +641,7 @@ relational_op(struct entry *p, struct entry *l, struct entry *r) {
     p->c_type = c_scalar;
     return;
   } else
-    type_error(p->linenum);
+    type_error(p->linenum,"relational_op");
 }
 
 not_op(struct entry *p, struct entry *l) {
@@ -651,11 +651,11 @@ not_op(struct entry *p, struct entry *l) {
     p->c_type = c_scalar;
     return;
   } else
-    type_error(p->linenum);
+    type_error(p->linenum,"not_op");
 }
 assignment_op(struct entry *p, struct entry *l, struct entry *r) {
   if (l->e_type != e_var) /* must be lvalue */
-    type_error(p->linenum);
+    type_error(p->linenum,"assignment_op: l not e_var");
   else if (l->t_type == r->t_type && l->c_type == r->c_type) {
     p->e_type = e_var; /* does it matter? */
     p->t_type = l->t_type;
@@ -682,9 +682,9 @@ assignment_op(struct entry *p, struct entry *l, struct entry *r) {
       p->c_type = c_scalar;
       return;
     } else
-      type_error(p->linenum);
+      type_error(p->linenum,"assignment_op: l and r not INT or FLOAT");
   } else
-    type_error(p->linenum);
+    type_error(p->linenum,"assignment_op: unknown type");
 }
 
 plus_minus_op(struct entry *p, struct entry *l, struct entry *r) {
@@ -695,7 +695,7 @@ plus_minus_op(struct entry *p, struct entry *l, struct entry *r) {
       p->c_type = l->c_type;
       return;
     } else
-      type_error(p->linenum);
+      type_error(p->linenum,"plus_minus_op: unary");
   } else if (l->t_type == r->t_type && l->c_type == r->c_type) {
     p->e_type = e_var;
     p->t_type = l->t_type;
@@ -750,7 +750,7 @@ plus_minus_op(struct entry *p, struct entry *l, struct entry *r) {
     p->c_type = c_scalar;
     return;
   } else
-    type_error(p->linenum);
+    type_error(p->linenum,"plus_minus_op: not unary");
 }
 
 mul_div_op(struct entry *p, struct entry *l, struct entry *r) {
@@ -772,7 +772,7 @@ mul_div_op(struct entry *p, struct entry *l, struct entry *r) {
       p->c_type = c_scalar; /* not sure this is correct */
       return;
     } else
-      type_error(p->linenum);
+      type_error(p->linenum,"mul_div_op: indirection");
   }
   if (l->t_type == r->t_type && (l->t_type == t_int || l->t_type == t_float) &&
       ((l->c_type == c_scalar || l->c_type == c_pointer) &&
@@ -782,7 +782,7 @@ mul_div_op(struct entry *p, struct entry *l, struct entry *r) {
     p->c_type = l->c_type;
     return;
   } else if (l->c_type != c_scalar || r->c_type != c_scalar)
-    type_error(p->linenum);
+    type_error(p->linenum,"mul_div_op: not indirection");
   else if (l->t_type == t_int && r->t_type == t_float) {
     p->left = make_node(ITOF, l, NULL);
     p->left->t_type = t_float;
@@ -802,10 +802,10 @@ mul_div_op(struct entry *p, struct entry *l, struct entry *r) {
     p->c_type = c_scalar;
     return;
   } else
-    type_error(p->linenum);
+    type_error(p->linenum,"mul_div_op");
 }
 
-void type_error(int line) {
-  printf("\n*** Type mismatch in line %d\n", line);
+void type_error(int line, char *str) {
+  printf("\n*** Type mismatch in line %d: %s\n", line, str);
   exit(1);
 }

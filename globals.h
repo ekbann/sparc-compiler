@@ -118,7 +118,7 @@ void debug_stats(int);
 void debug_entry(int, char *);
 void delete_level (void);
 void syntax_tree_dump (struct entry *);
-void type_error (int);
+void type_error (int, char *);
 void free_reg (struct entry *);
 void init_reg_tbl ();
 void flush_one_reg(int);
