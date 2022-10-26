@@ -173,7 +173,7 @@ void syntax_tree_dump(struct entry *node) {
                 printf("%s", print_n_class(node->node_class)); */
         printf("%s, ", print_n_type(node->node_type));
         printf("%s, ", print_e_type(node->e_type));
-        printf("%s,", print_t_type(node->t_type));
+        printf("%s, ", print_t_type(node->t_type));
         printf("%s\n", print_c_type(node->c_type));
       } else {
         for (i = level; i > 0; i--)
