@@ -1,4 +1,4 @@
-int printf(char *fmt, int a, int b);
+int printf(char *fmt, int x, int y);
 
 void main() {
   int a, b;
@@ -20,4 +20,6 @@ void main() {
     printf("a=%d, b=%d\n", a, b);
   }
   printf("a=%d, b=%d\n", a, b);
+/* debug(symtab_dump) */
 }
+/* debug(statement_dump) */
