@@ -32,3 +32,5 @@ The number in square brackets is a pointer to that specific node. At the end of 
 
 This allows the user to manually reconstruct the syntax tree to verify if the syntax tree was constructed properly. Another simpler way is to use the directive `debug(statement_dump)`.
 
+* The debug directive `debug(symtab_dump)` dumps the symbol table at the *current* context level. After the closing brace of a compound statement (see *CC.y* **statement** ) the compiler will delete the closing context level because those symbols are not required anymore.
+*
