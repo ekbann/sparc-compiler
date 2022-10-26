@@ -20,7 +20,7 @@ num		{digit}+
 snum		[+-]?(num)
 fnum1		(({num}\.{num}?)|({num}?\.{num}))([eE]{snum})?
 fnum2		({num}[eE]{snum})
-float		({fnum1}|{fnum2})[1LfF]?
+float		({fnum1}|{fnum2})[lLfF]?
 id		{letter}({letter}|{digit}|_)*
 oct		[0-7]
 hex		({digit}|[A-Fa-f])
