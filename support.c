@@ -117,9 +117,9 @@ struct entry *make_node(int n_type, struct entry *l, struct entry *r) {
     else
       printf("	left:	NODE [%d]\n", l);
     if (r && (r->node_type == LEAF))
-      printf("	right:	LEAF [%d]\n", r);
+      printf(" right:	LEAF [%d]\n", r);
     else
-      printf("    right: NODE [%d]\n", r);
+      printf(" right:   NODE [%d]\n", r);
   }
   return node;
 }
@@ -143,6 +143,7 @@ void delete_level(void) {
   context[context_level] = NULL; /* now an empty list                   */
   context_level--;               /* a context level has been deleted    */
 }
+
 int level = 0;         /* indentation level for statement dump		*/
 int loop_body = FALSE; /* if inside DO/WHILE loop body, STATEMENT	*/
                        /* nodes doesn't get indented to column 0,	*/
@@ -151,7 +152,7 @@ int loop_indent;       /* it gets indented to this column		*/
 void syntax_tree_dump(struct entry *node) {
   int i, n_type;
 
-  if (node) { /*process only if it is NOT a NULL node */
+  if (node) {     /*process only if it is NOT a NULL node */
     n_type = node->node_type;
     if ((n_type == DO) || (n_type == WHILE)) {
       loop_body = TRUE;
@@ -164,12 +165,11 @@ void syntax_tree_dump(struct entry *node) {
       else
         level = loop_indent;
     }
-
     else {
       if (n_type != LEAF) {
         for (i = level; i > 0; i--)
           printf("  ");
-        /*  if (level !=0)
+        /*  if (level != 0)
                 printf("%s", print_n_class(node->node_class)); */
         printf("%s, ", print_n_type(node->node_type));
         printf("%s, ", print_e_type(node->e_type));
@@ -235,7 +235,7 @@ void symtab_dump(void) {
         if (et == e_fn) {
           fn_parms = lexptr->type.fn.parameters; /* dump list of fn_parms */
           while (fn_parms) {
-            printf(" <\"%s\" ", fn_parms->lexeme);
+            printf("   <\"%s\" ", fn_parms->lexeme);
             printf("scope %d, ", fn_parms->scope);
             printf("%s, ", print_e_type(fn_parms->e_type));
             printf("%s, ", print_t_type(fn_parms->t_type));
@@ -249,6 +249,7 @@ void symtab_dump(void) {
     }
   }
 }
+
 char *print_n_class(int n_class) {
   switch (n_class) {
   case LVAL:
@@ -285,7 +286,7 @@ char *print_n_type(int n_type) {
   case OR:
     return ("||");
   case AND:
-    return ("&& ");
+    return ("&&");
   case EQUAL:
     return ("==");
   case NOT_EQUAL:
@@ -380,6 +381,7 @@ void debug(char *text) {
   if (token_listing)
     printf("%d: <%s,>\n", linenum, text);
 }
+
 void debug_entry(int token, char *lexeme) {
   printf("%d: <", linenum);
   switch (token) {
@@ -403,6 +405,7 @@ void debug_entry(int token, char *lexeme) {
   }
   printf(", %s>\n", lexeme);
 }
+
 void symtab_stats(void) {
   printf("\n*** SYMBOL TABLE STATISTICS\n");
   printf("\nTotal number of table entries: %d\n", num_entry);
@@ -414,11 +417,26 @@ void symtab_stats(void) {
   printf("\nTotal number of illegal symbols: %d\n", num_illegal);
   printf("\nTotal number of lookups: %d\n", num_lookup);
   printf("Total number of entries searched: %d\n", num_searched);
-  printf("Hash table efficiency: %.2f (entries searched per lookup) \n",
+  printf("Hash table efficiency: %.2f (entries searched per lookup)\n",
          (float)num_searched / num_lookup);
 }
+
 void check(struct entry *p) {
   struct entry *next, *l, *r;
+
+  /* TEST CODE */
+  if (p) {
+    printf("\n==========\n");
+    printf("testing P: %u\n", p);
+    printf("==========\n");
+    printf("lexeme = %s\n", p->lexeme);
+    printf("n_class = %s\n", print_n_class(p->node_class));
+    printf("n_type = %s\n", print_n_type(p->node_type));
+    printf("e_type = %s\n", print_e_type(p->e_type));
+    printf("t_type = %s\n", print_t_type(p->t_type));
+    printf("c_type = %s\n", print_c_type(p->c_type));
+  }
+
   if (!p)
     return;
   else if (p->lexeme) {
@@ -498,6 +516,7 @@ x4_op(struct entry *p, struct entry *l) {
   } else
     type_error(p->linenum,"x4_op");
 }
+
 def_op(struct entry *p, struct entry *l) {
   if (l->c_type == c_pointer) {
     p->e_type = e_var;
@@ -510,6 +529,7 @@ def_op(struct entry *p, struct entry *l) {
   } else
     type_error(p->linenum,"def_op");
 }
+
 array_op(struct entry *p, struct entry *l, struct entry *r) {
   if (r->t_type != t_int) /* array index is not an INT */
     type_error(p->linenum,"array_op");
@@ -534,6 +554,7 @@ mod_op(struct entry *p, struct entry *l, struct entry *r) {
   } else
     type_error(p->linenum,"mod_op");
 }
+
 call_op(struct entry *p, struct entry *l, struct entry *r) {
   struct entry *fn_parms; /* pointer for function parameters */
 
@@ -670,6 +691,7 @@ assignment_op(struct entry *p, struct entry *l, struct entry *r) {
       p->e_type = e_var;
       p->t_type = t_int;
       p->c_type = c_scalar;
+      printf("assignment_op: ELSE-IF #1\n");
       return;
     }
     if (l->t_type == t_float && r->t_type == t_int) {
@@ -680,11 +702,14 @@ assignment_op(struct entry *p, struct entry *l, struct entry *r) {
       p->e_type = e_var;
       p->t_type = t_float;
       p->c_type = c_scalar;
+      printf("assignment_op: ELSE-IF #2\n");
       return;
     } else
       type_error(p->linenum,"assignment_op: l and r not INT or FLOAT");
-  } else
+  } else {
     type_error(p->linenum,"assignment_op: unknown type");
+  }
+  printf("assignment_op: END OF FUNCTION\n");
 }
 
 plus_minus_op(struct entry *p, struct entry *l, struct entry *r) {
@@ -702,7 +727,7 @@ plus_minus_op(struct entry *p, struct entry *l, struct entry *r) {
     p->c_type = l->c_type;
     return;
   } else if (l->t_type == r->t_type &&
-             (l->c_type == t_int || l->t_type == t_float) &&
+             (l->t_type == t_int || l->t_type == t_float) &&
              ((l->c_type == c_scalar || l->c_type == c_pointer) &&
               (r->c_type == c_scalar || r->c_type == c_pointer))) {
     p->e_type = e_var;
@@ -754,12 +779,13 @@ plus_minus_op(struct entry *p, struct entry *l, struct entry *r) {
 }
 
 mul_div_op(struct entry *p, struct entry *l, struct entry *r) {
-  /*		int	float	*char	*int	*float
-        int	1	itof
-        float	itof	1
-        *char
-        *int
-        *float						*/
+
+  /*		    int	    float	*char	*int	*float      */
+  /*    int	    1	    itof                                */
+  /*    float	itof	1                                   */
+  /*    *char                                               */
+  /*    *int                                                */
+  /*    *float						                        */
 
   if (!p->right) { /* it is an indirection op */
     if (l->c_type == c_pointer) {
