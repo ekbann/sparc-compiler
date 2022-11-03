@@ -92,7 +92,6 @@ The `-e` option points out location of the first executable instruction (the ent
 ```
 $ sparc-linux-objdump -d -S Bar
 ```
-
 ###### Running on Qemu with gdb
 Install package qemu-user. This installs binaries for several targets, example qemu-alpha, qemu-mips, qemu-sparc.
 ```
@@ -129,8 +128,8 @@ g3             0x5	5
 ```
 Here are some useful tutorials on gdb:
 
-http://www.dirac.org/linux/gdb/
-http://www.csee.umbc.edu/~cpatel2/links/310/nasm/gdb_help.shtml
+- http://www.dirac.org/linux/gdb/
+- http://www.csee.umbc.edu/~cpatel2/links/310/nasm/gdb_help.shtml
 
 ### Design Notes
 Summary of the important aspects of my compiler:
