@@ -42,11 +42,9 @@ $ make menuconfig
 ```
 
 This will open a graphical interface. Go to `Toolchain–>` , scroll down and select the option `Build cross gdb for the host` . We have selected this option because the default buildroot configuration for sparc V8 (called qemu_sparc_ss10_defconfig) does not include cross-gdb by default. Save and exit the graphical interface. Now run make:
-
 ```
 $ make
 ```
-
 This will download and build required packages and can take a while. At the end of make, we get a working cross compiler toolchain. The binaries (sparc-linux-gcc, sparc-linux-as, sparc-linux-gdb etc) are present in folder: `<path-to-buildroot>/output/host/usr/bin`. Add this location to your system's PATH variable to use the cross compiler binaries outside buildroot.
 
 ###### Compiling and Assembling a Program
