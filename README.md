@@ -50,7 +50,7 @@ $ make
 This will download and build required packages and can take a while. At the end of make, we get a working cross compiler toolchain. The binaries (*sparc-linux-gcc*, *sparc-linux-as*, *sparc-linux-gdb* etc) are present in folder: `<path-to-buildroot>/output/host/usr/bin`. Add this location to your system's PATH variable to use the cross compiler binaries outside buildroot.
 
 ##### Compiling and Assembling a Program
-Consider a simple assembly program Foo.s:
+Consider a simple assembly program *Foo.s*:
 
 Foo.s
 ```
@@ -64,12 +64,12 @@ _start:
 	nop
 	nop
 ```
-Assemble and link it to get an executable Foo. (The -g option is to include debugging symbols in the generated executable).
+Assemble and link it to get an executable *Foo*. (The `-g` option is to include debugging symbols in the generated executable).
 ```
 $ sparc-linux-as -g -o Foo.o Foo.s
 $ sparc-linux-ld -g -o Foo   Foo.o
 ```
-Instead of assembly, you can start with a simple C program Bar.c:
+Instead of assembly, you can start with a simple C program *Bar.c*:
 
 Bar.c
 ```
@@ -88,7 +88,7 @@ $ sparc-linux-gcc -g -S      -o Bar.s Bar.c
 $ sparc-linux-as  -g         -o Bar.o Bar.s
 $ sparc-linux-ld  -g -e main -o Bar   Bar.o
 ```
-The `-e` option points out location of the first executable instruction (the entry point) to the linker. We set the entry point to the function main() in our case. The disassembled instructions in Bar can be viewed using objdump utility
+The `-e` option points out location of the first executable instruction (the entry point) to the linker. We set the entry point to the function *main()* in our case. The disassembled instructions in Bar can be viewed using *objdump* utility
 ```
 $ sparc-linux-objdump -d -S Bar
 ```
