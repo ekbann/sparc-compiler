@@ -29,10 +29,10 @@ make
 
 An alternative is to use **QEMU** and **Buildroot** to make tiny virtual machines. This tutorial describes how to compile or assemble simple user-level programs for a Sparc V8 target and step through their execution using Qemu and gdb. This tutorial assumes you're using linux.
 
-###### Cross Compiler
+##### Cross Compiler
 A cross compiler is needed when the machine on which the compiler is running (called the host) is of a different architecture (say x86) than the machine for which the executable is to be produced (called target, which is **Sparc V8** in our case). The simplest way of obtaining a working cross compiler is to use *Buildroot*.
 
-Download the latest *buildroot* tarball and untar it or simply clone from GitHub:
+Download the latest buildroot tarball and untar it or simply clone from GitHub:
 ```
 $ sudo apt install rsync
 $ git clone https://github.com/buildroot/buildroot.git buildroot
@@ -49,7 +49,7 @@ $ make
 ```
 This will download and build required packages and can take a while. At the end of make, we get a working cross compiler toolchain. The binaries (*sparc-linux-gcc*, *sparc-linux-as*, *sparc-linux-gdb* etc) are present in folder: `<path-to-buildroot>/output/host/usr/bin`. Add this location to your system's PATH variable to use the cross compiler binaries outside buildroot.
 
-###### Compiling and Assembling a Program
+##### Compiling and Assembling a Program
 Consider a simple assembly program Foo.s:
 
 Foo.s
@@ -92,20 +92,20 @@ The `-e` option points out location of the first executable instruction (the ent
 ```
 $ sparc-linux-objdump -d -S Bar
 ```
-###### Running on Qemu with gdb
-Install package qemu-user. This installs binaries for several targets, example qemu-alpha, qemu-mips, qemu-sparc.
+##### Running on Qemu with gdb
+Install package *qemu-user*. This installs binaries for several targets, example *qemu-alpha*, *qemu-mips*, *qemu-sparc*.
 ```
 $ sudo apt-get install qemu-user
 ```
-In a terminal start qemu-sparc and set it up for remote debugging with gdb.
+In a terminal start `qemu-sparc` and set it up for remote debugging with *gdb*.
 ```
 $ qemu-sparc -g 1234 Foo
 ```
-In another terminal, open gdb.
+In another terminal, open *gdb*.
 ```
 $ sparc-linux-gdb  Foo
 ```
-Inside gdb, attach to qemu :
+Inside *gdb*, attach to *qemu* :
 ```
 (gdb) target remote :1234
 In gdb, press s to step through assembly instructuctions. Use command `info reg <reg-name>` to examine register contents.
@@ -126,7 +126,7 @@ g3             0x0	0
 g3             0x5	5
 (gdb)
 ```
-Here are some useful tutorials on gdb:
+Here are some useful tutorials on *gdb*:
 
 - http://www.dirac.org/linux/gdb/
 - http://www.csee.umbc.edu/~cpatel2/links/310/nasm/gdb_help.shtml
