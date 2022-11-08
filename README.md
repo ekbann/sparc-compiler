@@ -30,22 +30,24 @@ make
 An alternative is to use **QEMU** and **Buildroot** to make tiny virtual machines. This tutorial describes how to compile or assemble simple user-level programs for a Sparc V8 target and step through their execution using Qemu and gdb. This tutorial assumes you're using linux.
 
 ###### Cross Compiler
-A cross compiler is needed when the machine on which the compiler is running (called the host) is of a different architecture (say x86) than the machine for which the executable is to be produced (called target, which is Sparc V8 in our case). The simplest way of obtaining a working cross compiler is to use Buildroot.
+A cross compiler is needed when the machine on which the compiler is running (called the host) is of a different architecture (say x86) than the machine for which the executable is to be produced (called target, which is **Sparc V8** in our case). The simplest way of obtaining a working cross compiler is to use *Buildroot*.
 
-Download the latest buildroot tarball and untar it. Navigate to the untared buildroot directory and run the following commands:
-
+Download the latest *buildroot* tarball and untar it or simply clone from GitHub:
 ```
 $ sudo apt install rsync
 $ git clone https://github.com/buildroot/buildroot.git buildroot
+```
+Navigate to the untared buildroot directory and run the following commands:
+```
+$ cd buildroot
 $ make qemu_sparc_ss10_defconfig
 $ make menuconfig
 ```
-
-This will open a graphical interface. Go to `Toolchain–>` , scroll down and select the option `Build cross gdb for the host` . We have selected this option because the default buildroot configuration for sparc V8 (called qemu_sparc_ss10_defconfig) does not include cross-gdb by default. Save and exit the graphical interface. Now run make:
+This will open a graphical interface. Go to `Toolchain–>` , scroll down and select the option `Build cross gdb for the host` . We have selected this option because the default buildroot configuration for sparc V8 (called *qemu_sparc_ss10_defconfig*) does not include *cross-gdb* by default. Save and exit the graphical interface. Now run make:
 ```
 $ make
 ```
-This will download and build required packages and can take a while. At the end of make, we get a working cross compiler toolchain. The binaries (sparc-linux-gcc, sparc-linux-as, sparc-linux-gdb etc) are present in folder: `<path-to-buildroot>/output/host/usr/bin`. Add this location to your system's PATH variable to use the cross compiler binaries outside buildroot.
+This will download and build required packages and can take a while. At the end of make, we get a working cross compiler toolchain. The binaries (*sparc-linux-gcc*, *sparc-linux-as*, *sparc-linux-gdb* etc) are present in folder: `<path-to-buildroot>/output/host/usr/bin`. Add this location to your system's PATH variable to use the cross compiler binaries outside buildroot.
 
 ###### Compiling and Assembling a Program
 Consider a simple assembly program Foo.s:
