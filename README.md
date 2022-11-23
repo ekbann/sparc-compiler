@@ -136,7 +136,7 @@ Summary of the important aspects of my compiler:
 
 * The code was originally written in 1996 on a Sun SPARCstation 20 (32-bit RISC architecture) running Solaris 2.6 using *gcc 2.7.x* which was **not** ANSI C compliant. Some parts of the code had to be re-written or fixed to eliminate compiler warnings and errors, but the use of pointers in the old days was somewhat hazardous and sometimes relied on *Undefined Behavior* to make the code work. Using a modern *gcc 10.2.x* broke the code causing occasional **segmentation fault**. Luckily, using *clang* instead mantained those UB and the compiler ran smoothly. Perhaps one day I'll re-write the compiler with proper pointer usage.
 * All `external_decls` are assigned `modifier` type `EXTERN` unless specifically defined in the source code.
-* I added a new debug directive, `debug(node_dump_on)` and its counterpart `debug(node_dump_off)`, which keeps track of the creation of new syntax tree nodes. The output format of a sample node is:
+* I added a debug directive, `debug(node_dump_on)` and its counterpart `debug(node_dump_off)`, to keep track of the creation of syntax tree nodes. The output of a few sample nodes is:
 
 ```
 node_type: STATEMENT [0x600000f7c240]
@@ -152,7 +152,25 @@ The number in square brackets is a pointer to that specific node. At the end of 
 
     syntax tree root = [0x600000f7c2a0]
 
-This allows the user to manually reconstruct the syntax tree to verify if the syntax tree was constructed properly. Another simpler way is to use the directive `debug(statement_dump)`.
+This allows the user to manually reconstruct the syntax tree to verify if the syntax tree was constructed properly. Another way is to use the directive `debug(statement_dump)` to get a verbose view of the syntax tree:
+
+```
+*** STATEMENT DUMP
+
+=, e_var, t_int, c_scalar
+  x, e_var, t_int, c_scalar
+  3, e_const, t_int, c_scalar
+
+=, e_var, t_int, c_scalar
+  y, e_var, t_int, c_scalar
+  10, e_const, t_int, c_scalar
+
+=, e_var, t_int, c_scalar
+  z, e_var, t_int, c_scalar
+  +, e_var, t_int, c_scalar
+    x, e_var, t_int, c_scalar
+    y, e_var, t_int, c_scalar
+```
 
 * The debug directive `debug(symtab_dump)` dumps the symbol table at the *current* context level. After the closing brace of a compound statement (see *CC.y* **statement** ) the compiler will delete the closing context level because those symbols are not required anymore.
 ```
