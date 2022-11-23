@@ -9,3 +9,4 @@ void main() {
   for (i = 0; i < 10; i++)
     printf("ary[%d] = %d\n", i, ary[i]);
 }
+/* debug(statement_dump) */

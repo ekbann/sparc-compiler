@@ -8,4 +8,6 @@ void dump_array() {
   for (i = 0; i < 10; i++)
     printf("%4d", ary[i]);
   putchar('\n');
+  /* debug(symtab_dump) */
 }
+/* debug(statement_dump) */

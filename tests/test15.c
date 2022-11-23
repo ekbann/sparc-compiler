@@ -17,3 +17,4 @@ float foo() {
   x = baa(x + 4.0, a + 3.5);
   return l + m;
 }
+/* debug(statement_dump) */

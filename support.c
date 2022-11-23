@@ -10,7 +10,7 @@ int hashpjw(char *s) {
   unsigned h = 0, g;
   for (p = s; *p != EOS; p++) {
     h = (h << 4) + (*p);
-    if (g = h & 0xf0000000) {
+    if ((g = h & 0xf0000000)) {
       h = h ^ (g >> 24);
       h = h ^ g;
     }
@@ -111,15 +111,15 @@ struct entry *make_node(int n_type, struct entry *l, struct entry *r) {
   node->t_type = t_unknown;
   node->c_type = c_unknown;
   if (node_dump) {
-    printf("\nnode_type: %s [%d]\n", print_n_type(n_type), node);
+    printf("\nnode_type: %s [%p]\n", print_n_type(n_type), node);
     if (l && (l->node_type == LEAF))
-      printf("	left:	LEAF [%d]\n", l);
+      printf("\t  left:	LEAF [%p]\n", l);
     else
-      printf("	left:	NODE [%d]\n", l);
+      printf("\t  left:	NODE [%p]\n", l);
     if (r && (r->node_type == LEAF))
-      printf(" right:	LEAF [%d]\n", r);
+      printf("\t right:	LEAF [%p]\n", r);
     else
-      printf(" right:   NODE [%d]\n", r);
+      printf("\t right: NODE [%p]\n", r);
   }
   return node;
 }
@@ -424,19 +424,6 @@ void symtab_stats(void) {
 void check(struct entry *p) {
   struct entry *next, *l, *r;
 
-  /* TEST CODE */
-  if (p) {
-    printf("\n==========\n");
-    printf("testing P: %u\n", p);
-    printf("==========\n");
-    printf("lexeme = %s\n", p->lexeme);
-    printf("n_class = %s\n", print_n_class(p->node_class));
-    printf("n_type = %s\n", print_n_type(p->node_type));
-    printf("e_type = %s\n", print_e_type(p->e_type));
-    printf("t_type = %s\n", print_t_type(p->t_type));
-    printf("c_type = %s\n", print_c_type(p->c_type));
-  }
-
   if (!p)
     return;
   else if (p->lexeme) {
@@ -507,7 +494,8 @@ void check(struct entry *p) {
     }
   }
 }
-x4_op(struct entry *p, struct entry *l) {
+
+void x4_op(struct entry *p, struct entry *l) {
   if (l->t_type == t_int) {
     p->e_type = e_var;
     p->t_type = l->t_type;
@@ -517,7 +505,7 @@ x4_op(struct entry *p, struct entry *l) {
     type_error(p->linenum,"x4_op");
 }
 
-def_op(struct entry *p, struct entry *l) {
+void def_op(struct entry *p, struct entry *l) {
   if (l->c_type == c_pointer) {
     p->e_type = e_var;
     if (l->t_type == t_char)
@@ -530,7 +518,7 @@ def_op(struct entry *p, struct entry *l) {
     type_error(p->linenum,"def_op");
 }
 
-array_op(struct entry *p, struct entry *l, struct entry *r) {
+void array_op(struct entry *p, struct entry *l, struct entry *r) {
   if (r->t_type != t_int) /* array index is not an INT */
     type_error(p->linenum,"array_op");
   if (l->type.var.width == 4) {
@@ -545,7 +533,7 @@ array_op(struct entry *p, struct entry *l, struct entry *r) {
   p->c_type = c_pointer;
 }
 
-mod_op(struct entry *p, struct entry *l, struct entry *r) {
+void mod_op(struct entry *p, struct entry *l, struct entry *r) {
   if (l->t_type == t_int && r->t_type == t_int) {
     p->e_type = e_var;
     p->t_type = t_int;
@@ -555,7 +543,7 @@ mod_op(struct entry *p, struct entry *l, struct entry *r) {
     type_error(p->linenum,"mod_op");
 }
 
-call_op(struct entry *p, struct entry *l, struct entry *r) {
+void call_op(struct entry *p, struct entry *l, struct entry *r) {
   struct entry *fn_parms; /* pointer for function parameters */
 
   p->e_type = e_var;
@@ -580,7 +568,7 @@ call_op(struct entry *p, struct entry *l, struct entry *r) {
   return;
 }
 
-return_op(struct entry *p, struct entry *l) {
+void return_op(struct entry *p, struct entry *l) {
   p->e_type = e_var; /* make sure RETURN has same type as function */
   p->t_type = fn_p->t_type;
   p->c_type = fn_p->c_type;
@@ -604,7 +592,8 @@ return_op(struct entry *p, struct entry *l) {
   } else
     type_error(p->linenum,"return_op: unknown return type");
 }
-address_op(struct entry *p, struct entry *l) {
+
+void address_op(struct entry *p, struct entry *l) {
   if ((l->e_type == e_var && l->type.var.m_type != m_register) ||
       l->e_type == e_fn) {
     p->e_type = e_var;
@@ -617,7 +606,7 @@ address_op(struct entry *p, struct entry *l) {
     type_error(p->linenum,"address_op");
 }
 
-inc_dec_op(struct entry *p, struct entry *l) {
+void inc_dec_op(struct entry *p, struct entry *l) {
   if (l->e_type == e_var) {
     p->e_type = e_var;
     p->t_type = l->t_type;
@@ -627,7 +616,7 @@ inc_dec_op(struct entry *p, struct entry *l) {
     type_error(p->linenum,"inc_dec_op");
 }
 
-logical_op(struct entry *p, struct entry *l, struct entry *r) {
+void logical_op(struct entry *p, struct entry *l, struct entry *r) {
   if ((l->t_type == t_int || l->t_type == t_float) &&
       (r->t_type == t_int || r->t_type == t_float)) {
     p->e_type = e_var;
@@ -637,7 +626,8 @@ logical_op(struct entry *p, struct entry *l, struct entry *r) {
   } else
     type_error(p->linenum,"logical_op");
 }
-relational_op(struct entry *p, struct entry *l, struct entry *r) {
+
+void relational_op(struct entry *p, struct entry *l, struct entry *r) {
   if (l->t_type == r->t_type && (l->t_type == t_int || l->t_type == t_float)) {
     p->e_type = e_var;
     p->t_type = t_int;
@@ -665,7 +655,7 @@ relational_op(struct entry *p, struct entry *l, struct entry *r) {
     type_error(p->linenum,"relational_op");
 }
 
-not_op(struct entry *p, struct entry *l) {
+void not_op(struct entry *p, struct entry *l) {
   if (l->t_type == t_int || l->t_type == t_float) {
     p->e_type = e_var;
     p->t_type = t_int;
@@ -674,7 +664,8 @@ not_op(struct entry *p, struct entry *l) {
   } else
     type_error(p->linenum,"not_op");
 }
-assignment_op(struct entry *p, struct entry *l, struct entry *r) {
+
+void assignment_op(struct entry *p, struct entry *l, struct entry *r) {
   if (l->e_type != e_var) /* must be lvalue */
     type_error(p->linenum,"assignment_op: l not e_var");
   else if (l->t_type == r->t_type && l->c_type == r->c_type) {
@@ -712,7 +703,7 @@ assignment_op(struct entry *p, struct entry *l, struct entry *r) {
   printf("assignment_op: END OF FUNCTION\n");
 }
 
-plus_minus_op(struct entry *p, struct entry *l, struct entry *r) {
+void plus_minus_op(struct entry *p, struct entry *l, struct entry *r) {
   if (!p->right) { /* it is unary minus or unary plus */
     if (l->t_type == t_int || l->t_type == t_float) {
       p->e_type = l->e_type;
@@ -778,7 +769,7 @@ plus_minus_op(struct entry *p, struct entry *l, struct entry *r) {
     type_error(p->linenum,"plus_minus_op: not unary");
 }
 
-mul_div_op(struct entry *p, struct entry *l, struct entry *r) {
+void mul_div_op(struct entry *p, struct entry *l, struct entry *r) {
 
   /*		    int	    float	*char	*int	*float      */
   /*    int	    1	    itof                                */

@@ -12,4 +12,6 @@ main() {
   while (scanf("%d %d", &x, &y) != EOF)
     if (x > 0 && y > 0)
       printf("Greatest common divisor of %d and %d is %d.\n", x, y, gcd(x, y));
+  /* debug(symtab_dump) */
 }
+/* debug(statement_dump) */

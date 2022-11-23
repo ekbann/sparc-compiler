@@ -87,7 +87,10 @@ void code(struct entry *p)
       }
       flag_postfix = NULL;   /* no more postfix variable to update */
     }
-/*  flush_regs();   /* do i really need to flush? how about just free regs? */
+
+    /* do i really need to flush? how about just free regs? */
+    /* flush_regs(); */
+
     free_outs();    /* this is better because no need to save data */
     code (p->left);
     code (p->right);
@@ -103,9 +106,10 @@ void code(struct entry *p)
   }
     break;
   case WHILE: {
-    char loop[6], test[6];
-    newlabel(loop, 'L');
-    fprintf(fp, "\tba\t%s\n\tnop\n", newlabel(test, 'L'));
+    char loop[6], test[6], temp1[6], temp2[6];
+    strcpy(loop, newlabel(temp1, 'L'));
+    strcpy(test, newlabel(temp2, 'L'));
+    fprintf(fp, "\tba\t%s\n\tnop\n", test);
     fprintf(fp, "%s:\n", loop);
     code(p->right);
     fprintf(fp, "%s:\n", test);
@@ -217,7 +221,7 @@ int n = 0;		/* keep track of the number of parameters */
 struct entry *parm;
 
 flag_load= 1;
-if (parm = p->right) { /* are there any arguments? */
+if ((parm = p->right)) { /* are there any arguments? */
 flush_regs();	/* yes; then flush all out registers */
 while (parm) {
 n++;
@@ -738,6 +742,7 @@ case LT: return("bge"); break;
 case LE: return("bg"); break;
 case EQUAL: return ("bne"); break;
 case NOT_EQUAL: return("be"); break;
+default: exit(1);
 }
 }
 

@@ -137,6 +137,7 @@ char * inv_relop(int);
 struct entry * lookup(char *);
 struct entry * insert(int, char *, int);
 struct entry * make_node(int, struct entry *, struct entry *);
+void check(struct entry *);
 int hashpjw(char *);
 int align(int, int);
 int get_local(struct entry *);		/* %l0-l7 */
@@ -144,3 +145,18 @@ int get_in(struct entry *);		    /* %i0-i5 */
 int get_reg(struct entry *);		/* %o0-o5 */
 int load_reg(struct entry *);
 int check_regs();
+void code(struct entry *);
+void x4_op(struct entry *, struct entry *);
+void def_op(struct entry *, struct entry *);
+void array_op(struct entry *, struct entry *, struct entry *);
+void mod_op(struct entry *, struct entry *, struct entry *);
+void call_op(struct entry *, struct entry *, struct entry *);
+void return_op(struct entry *, struct entry *);
+void address_op(struct entry *, struct entry *);
+void inc_dec_op(struct entry *, struct entry *);
+void logical_op(struct entry *, struct entry *, struct entry *);
+void relational_op(struct entry *, struct entry *, struct entry *);
+void not_op(struct entry *, struct entry *);
+void assignment_op(struct entry *, struct entry *, struct entry *);
+void plus_minus_op(struct entry *, struct entry *, struct entry *);
+void mul_div_op(struct entry *, struct entry *, struct entry *);

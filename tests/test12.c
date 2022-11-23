@@ -9,3 +9,4 @@ void main() {
   printf("i = %d\n", i);
   printf("a[2*i] = i+4*i-i = %d\n", a[2 * i]);
 }
+/* debug(statement_dump) */

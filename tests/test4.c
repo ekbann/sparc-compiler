@@ -6,3 +6,4 @@ void main() {
   else
     b = a;
 }
+/* debug(statement_dump) */

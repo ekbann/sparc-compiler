@@ -1,8 +1,8 @@
 int main() {
   int i, j, k;
 
-  ;  /* null statement */
-  3; /* expression statements */
+  ;  		/* null statement */
+  3; 		/* expression statements */
   -3;
   i + 3;
   i + 3 * j - 4;
@@ -30,3 +30,4 @@ int main() {
     i--;
   return k - 3 * 4;
 }
+/* debug(statement_dump) */

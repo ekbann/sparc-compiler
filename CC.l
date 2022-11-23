@@ -95,7 +95,7 @@ static		{debug(yytext); return(STATIC);}
 {spchar}	{debug(yytext); yylval.token = yytext[0]; return(*yytext);}
 
 {id}		{
-				if (yylval.symp = lookup(yytext)) {		/* if string exists */
+				if ((yylval.symp = lookup(yytext))) {		/* if string exists */
 				  yylval.symp->references--;			/* false count */
 				  yylval.lexeme = yylval.symp->lexeme;	/* use it; save mem */
 				}
@@ -109,7 +109,7 @@ static		{debug(yytext); return(STATIC);}
 			}
 
 {int}		{
-				if (yylval.symp = lookup(yytext)) {		/* if string exists */
+				if ((yylval.symp = lookup(yytext))) {		/* if string exists */
 				  yylval.symp->references--;			/* false count	    */
 				  yylval.lexeme = yylval.symp->lexeme;	/* use it; save mem */
 				}
@@ -123,7 +123,7 @@ static		{debug(yytext); return(STATIC);}
 			}
 
 {float}		{
-				if (yylval.symp = lookup(yytext)) {		/* if string exists */
+				if ((yylval.symp = lookup(yytext))) {		/* if string exists */
 				  yylval.symp->references--;			/* false count	    */
 				  yylval.lexeme = yylval.symp->lexeme;	/* use it; save mem */
 				}
@@ -137,7 +137,7 @@ static		{debug(yytext); return(STATIC);}
 			}
 
 {char}		{
-				if (yylval.symp = lookup(yytext)) {		/* if string exists */
+				if ((yylval.symp = lookup(yytext))) {		/* if string exists */
 				  yylval.symp->references--;			/* false count	    */
 				  yylval.lexeme = yylval.symp->lexeme;	/* use it; save mem */
 				}
@@ -151,7 +151,7 @@ static		{debug(yytext); return(STATIC);}
 			}
 
 {string}	{
-				if (yylval.symp = lookup(yytext)) {		/* if string exists */
+				if ((yylval.symp = lookup(yytext))) {		/* if string exists */
 				  yylval.symp->references--;			/* false count	    */
 				  yylval.lexeme = yylval.symp->lexeme;	/* use it; save mem */
 				}
@@ -178,7 +178,7 @@ static		{debug(yytext); return(STATIC);}
 
 void yyerror(const char *msg)
 {
-  static errors = 10;
+  static int errors = 10;
 
   printf("%d: %s at '%s'\n", linenum, msg, yytext);
   if (! --errors)

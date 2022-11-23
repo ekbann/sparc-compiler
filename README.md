@@ -137,17 +137,33 @@ Summary of the important aspects of my compiler:
 * All `external_decls` are assigned `modifier` type `EXTERN` unless specifically defined in the source code.
 * I added a new debug directive, `debug(node_dump_on)` and its counterpart `debug(node_dump_off)`, which keeps track of the creation of new syntax tree nodes. The output format of a sample node is:
 
-```   
-    node_type: = [104576]
-         left:   LEAF [106304]
-        right:   NODE [104640]
+```
+node_type: STATEMENT [0x600000f7c240]
+	  left:	LEAF [0x600000f7c1e0]
+	 right: NODE [0x0]
+
+node_type: STATEMENT [0x600000f7c2a0]
+	  left:	LEAF [0x600000f7c180]
+	 right: NODE [0x600000f7c240]
 ```
 
 The number in square brackets is a pointer to that specific node. At the end of parsing the source code, this directive outputs the pointer to the `ROOT` of the program syntax tree, e.g.
 
-    `syntax tree root = [138368]`
+    `syntax tree root = [0x600000f7c2a0]`
 
 This allows the user to manually reconstruct the syntax tree to verify if the syntax tree was constructed properly. Another simpler way is to use the directive `debug(statement_dump)`.
 
 * The debug directive `debug(symtab_dump)` dumps the symbol table at the *current* context level. After the closing brace of a compound statement (see *CC.y* **statement** ) the compiler will delete the closing context level because those symbols are not required anymore.
+```
+*** SYMBOL TABLE DUMP, e_<entry type>, t_<variable type>, c_<constructor type>
+
+bucket 24
+<"main" scope 0, e_fn, t_void, c_scalar, references: 1>
+
+bucket 4
+<""hello"" scope 0, e_const, t_char, c_array, references: 1>
+
+bucket 2
+<"'c'" scope 0, e_const, t_char, c_scalar, references: 1>
+```
 *

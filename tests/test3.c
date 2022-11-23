@@ -4,3 +4,4 @@ void main() {
 
   a = b + c / d * e;
 }
+/* debug(statement_dump) */

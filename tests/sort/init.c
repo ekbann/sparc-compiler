@@ -11,4 +11,6 @@ void init() {
   ary[7] = 0;
   ary[8] = 2;
   ary[9] = 3;
+  /* debug(symtab_dump) */
 }
+/* debug(statement_dump) */

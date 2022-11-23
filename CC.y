@@ -14,6 +14,9 @@ struct entry *syntax_tree;
 struct entry *hashtbl[PRIME];
 struct entry *context[MAX_CONTEXT_LEVELS];
 
+int yylex();
+void yyerror(const char *s);
+
 %}
 
 /* define union for yylval */
@@ -146,7 +149,7 @@ var_list		: var_item {
 						}
 						if (flag_modifier) {	/* if modifier was specified */
 						  if (flag_modifier == m_register) {
-							if (r = get_local($1)) {
+							if ((r = get_local($1))) {
 							  $1->type.var.m_type = m_register;
 							  printf("e_var '%s' is assigned ", $1->lexeme);
 							  printf("register: %s\n", print_reg(r));
@@ -201,7 +204,7 @@ var_list		: var_item {
 						}
 						if (flag_modifier) {	/* if modifier was specified */
 						  if (flag_modifier == m_register) {
-							if (r = get_local($3)) {
+							if ((r = get_local($3))) {
 							  $3->type.var.m_type = m_register;
 							  printf("e_var '%s' is assigned ", $3->lexeme);
 							  printf("register: %s\n", print_reg(r));
@@ -364,7 +367,7 @@ parm_decl		: type_name ID {
 
 function_body	: internal_decls statement_list {
 					  if (node_dump)
-						printf("\nsyntax tree root = [%d]\n", $2);
+						printf("\nsyntax tree root = [%p]\n", $2);
 					  syntax_tree = $2;
 					}
 				;
@@ -561,7 +564,7 @@ argument_list	: expression ',' argument_list {
 
 %%
 
-main() {
+int main(void) {
   if ((fp = fopen("output.s", "w")) == NULL) {
 	printf("CC: can't open 'output.s'\n");
 	exit(1);

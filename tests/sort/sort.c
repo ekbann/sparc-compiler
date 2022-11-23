@@ -11,4 +11,6 @@ void sort(int n) {
         ary[j] = ary[j + gap];
         ary[j + gap] = temp;
       }
+  /* debug(symtab_dump) */
 }
+/* debug(statement_dump) */

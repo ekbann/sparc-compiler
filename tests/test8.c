@@ -7,3 +7,4 @@ void main() {
   b = a++ + 7;
   b = ++r - a++ / 7;
 }
+/* debug(statement_dump) */

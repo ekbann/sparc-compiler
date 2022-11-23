@@ -11,3 +11,4 @@ void main() {
     d = 4;
   }
 }
+/* debug(statement_dump) */

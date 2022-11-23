@@ -12,4 +12,6 @@ int gcd(int u, int v) {
     u = u - v;
   }
   return v;
+  /* debug(symtab_dump) */
 }
+/* debug(statement_dump) */
