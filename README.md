@@ -132,7 +132,7 @@ Here are some useful tutorials on *gdb*:
 ### Design Notes
 Summary of the important aspects of my compiler:
 
-* The code was originally written in 1996 on a Sun SPARCstation 20 (32-bit RISC architecture) running Solaris 2.6 using *gcc 2.7.x* which was **not** ANSI C compliant. Some parts of the code had to be re-written or fixed to eliminate compiler warnings and errors, but the use of pointers in the old days was somewhat hazardous and sometimes relied on *Undefined Behavior* to make the code work. Using a modern *gcc 10.2.x* broke the code causing occasional **segmentation fault**. Luckily, using *clang* instead mantained those UB and the compiler ran smoothly. Perhaps one day I'll re-write the compiler with proper pointer usage.
+* The code was originally written in 1996 on a Sun SPARCstation 20 (32-bit RISC architecture) running Solaris 2.6 using *gcc 2.7.x* which was **not** ANSI C compliant. Some parts of the code had to be re-written or fixed to eliminate compiler warnings and errors, but the use of pointers in the old days was somewhat hazardous and sometimes relied on *Undefined Behavior* to make the code work. Using a modern *gcc 10.2.x* broke the code causing occasional **segmentation fault** (Try compiling with *gcc* and running `./CC < tests/gcc-segfault.c`). Luckily, using *clang* instead mantained those UB and the compiler ran smoothly. Perhaps one day I'll re-write the compiler with proper pointer usage.
 * All `external_decls` are assigned `modifier` type `EXTERN` unless specifically defined in the source code.
 * I added a debug directive, `debug(node_dump_on)` and its counterpart `debug(node_dump_off)`, to keep track of the creation of syntax tree nodes. The output of a few sample nodes is:
 
